@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Emprendedoras - Jefas de Hogar</title>
+    <link rel="icon" href="/media/logos/ISOTIPO.png" type="image/png" sizes="32x32 64x64">
+    <!-- Google Fonts Outfit & Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- ESTILO DASHBOARD SIDEBAR (Premium, Lateral y Outfit) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', 'Nunito', 'Segoe UI', sans-serif; }
+        body { background-color: #F4F5FD; color: #2D2A4A; font-smoothing: antialiased; }
+        
+        /* Contenedor Principal Flex */
+        .admin-layout { display: flex; min-height: 100vh; }
+        
+        /* 1. Sidebar (Menú Lateral) */
+        .sidebar { 
+            width: 280px; 
+            background-color: #5956B3; 
+            color: #FFFFFF; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 2rem 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 4px 0 15px rgba(89, 86, 179, 0.08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            height: 100vh;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-logo { 
+            margin-bottom: 3rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            height: 70px;
+            overflow: hidden;
+        }
+        .sidebar-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-nav { display: flex; flex-direction: column; gap: 0.8rem; }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 1.2rem; 
+            padding: 1rem 1.5rem; 
+            color: #D2D0F0; 
+            text-decoration: none; 
+            font-weight: 700; 
+            border-radius: 30px; 
+            transition: all 0.3s ease; 
+        }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #FFFFFF; }
+        .nav-item.active { 
+            background: linear-gradient(135deg, #C07DE3, #E1799F); 
+            color: #FFFFFF; 
+            box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); 
+        }
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .nav-text { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 2. Área de Contenido de la Derecha */
+        .main-content { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Cabecera Superior */
+        .top-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1.5rem 3rem; 
+            background: #FFFFFF; 
+            box-shadow: 0 4px 15px rgba(89, 86, 179, 0.03); 
+        }
+        .toggle-sidebar-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #5956B3;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .toggle-sidebar-btn:hover {
+            background-color: #F8F3FB;
+        }
+        .admin-layout.collapsed-sidebar .sidebar {
+            transform: translateX(-280px);
+        }
+        .admin-layout.collapsed-sidebar .main-content {
+            margin-left: 0;
+        }
+        .page-info h1 { font-size: 1.5rem; color: #5956B3; font-weight: 800; }
+        .user-profile { display: flex; align-items: center; gap: 1rem; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2); }
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 800; color: #2D2A4A; font-size: 1rem; }
+        .user-role { color: #69658A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+        /* Área de Contenido Interno */
+        .content-body { padding: 3rem; }
+
+        /* Tarjetas de formulario y tablas */
+        .form-card, .table-container { background: #FFFFFF; border-radius: 30px; padding: 3rem; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); width: 100%; border: 1px solid #DBB6EF; margin-bottom: 2.5rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .form-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(89, 86, 179, 0.06); }
+        .form-card h3 { color: #5956B3; margin-bottom: 2rem; font-size: 1.35rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+        
+        /* Inputs y Grupos */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: span 2; }
+        label { font-weight: 700; margin-bottom: 0.6rem; color: #69658A; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea { padding: 1rem 1.2rem; border: 2px solid transparent; border-radius: 20px; outline: none; font-size: 1rem; transition: all 0.3s ease; background-color: #F2E8F9; width: 100%; color: #2D2A4A; font-weight: 500; }
+        input:focus, select:focus, textarea:focus { border-color: #C07DE3; background-color: #FFFFFF; box-shadow: 0 0 0 4px rgba(192, 125, 227, 0.15); }
+        textarea { resize: vertical; min-height: 120px; }
+        
+        /* Botones */
+        .btn-submit { background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; border: none; padding: 1rem 2rem; font-size: 1.05rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); letter-spacing: 0.5px; }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(225, 121, 159, 0.35); }
+        .btn-submit:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2); }
+        
+        .btn-secondary { background: #FFFFFF; color: #5956B3; border: 2px solid #DBB6EF; padding: 0.8rem 1.5rem; font-size: 0.95rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-secondary:hover { background: #F2E8F9; border-color: #5956B3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(89, 86, 179, 0.1); }
+        
+        .btn-remove { background: #FFF0F0; color: #FF4D4D; border: none; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 700; border-radius: 20px; cursor: pointer; transition: 0.3s ease; }
+        .btn-remove:hover { background: #FF4D4D; color: #FFFFFF; box-shadow: 0 5px 15px rgba(255, 77, 77, 0.2); }
+
+        /* Toasts */
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: rgba(26, 26, 46, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF; padding: 1.2rem 1.5rem; border-radius: 24px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); min-width: 320px; max-width: 420px; transform: translateX(120%); animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; position: relative; overflow: hidden; }
+        .toast.hide { animation: slideOutRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideInRight { to { transform: translateX(0); } }
+        @keyframes slideOutRight { to { transform: translateX(120%); } }
+        .toast-close { background: none; border: none; color: #A09EBD; font-size: 1.4rem; cursor: pointer; transition: color 0.3s, transform 0.3s; padding-left: 15px; font-weight: 300; }
+        .toast-close:hover { color: #FFFFFF; transform: scale(1.1); }
+        .toast-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #10B981, #34D399); width: 100%; animation: toastProgress 5s linear forwards; border-radius: 0 0 0 24px; }
+        @keyframes toastProgress { to { width: 0; } }
+        .toast-icon { margin-right: 12px; font-size: 1.4rem; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6)); display: flex; align-items: center; }
+
+        /* Tablas */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 1rem; text-align: left; }
+        th { color: #69658A; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; padding: 0 1.5rem 0.5rem; border: none; }
+        td { background: #F2E8F9; padding: 1.2rem 1.5rem; border: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        tr td:first-child { border-radius: 24px 0 0 24px; }
+        tr td:last-child { border-radius: 0 24px 24px 0; }
+        tbody tr:hover td { background: #FFFFFF; cursor: pointer; box-shadow: 0 10px 25px rgba(89, 86, 179, 0.08); }
+        .action-buttons { display: flex; gap: 0.5rem; align-items: center; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; font-weight: 700; border-radius: 20px; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .btn-view { background: #E8F8F5; color: #10B981; }
+        .btn-view:hover { background: #10B981; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+        .btn-edit { background: #F2E8F9; color: #5956B3; }
+        .btn-edit:hover { background: #5956B3; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(89, 86, 179, 0.2); }
+
+        /* Stepper Estilo */
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            background: #FFFFFF;
+            padding: 1.8rem 3rem;
+            border-radius: 30px;
+            border: 1px solid #DBB6EF;
+            box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03);
+            position: relative;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        .step-num {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #F2E8F9;
+            border: 2px solid #DBB6EF;
+            color: #69658A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #69658A;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .edit-mode .step {
+            cursor: pointer;
+        }
+        .edit-mode .step:hover .step-num {
+            transform: scale(1.1);
+            border-color: #5956B3;
+            box-shadow: 0 0 15px rgba(89, 86, 179, 0.2);
+        }
+        .step-line {
+            height: 4px;
+            background: #F2E8F9;
+            border-radius: 2px;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            z-index: 1;
+            width: 80%;
+            transition: all 0.4s ease;
+        }
+        .step-line-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #5956B3, #E1799F);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+        .step.active .step-num {
+            background: linear-gradient(135deg, #5956B3, #C07DE3);
+            border-color: #5956B3;
+            color: #FFFFFF;
+            box-shadow: 0 8px 20px rgba(89, 86, 179, 0.25);
+            transform: scale(1.1);
+        }
+        .step.active .step-label { color: #5956B3; font-weight: 800; }
+        .step.completed .step-num { background: #10B981; border-color: #10B981; color: #FFFFFF; }
+        .step.completed .step-label { color: #10B981; }
+
+        /* Asistente Paso a Paso */
+        .wizard-step { display: none; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .wizard-step.active { display: block; }
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .wizard-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; margin-bottom: 3rem; }
+
+        /* Estilo para los Cargadores de Imagen Personalizados */
+        .upload-zone {
+            border: 2px dashed #DBB6EF;
+            border-radius: 20px;
+            background-color: #F2E8F9;
+            padding: 2.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        .upload-zone:hover, .upload-zone.drag-active {
+            border-color: #C07DE3;
+            background-color: rgba(192, 125, 227, 0.05);
+            box-shadow: 0 8px 25px rgba(192, 125, 227, 0.08);
+        }
+        .upload-zone .upload-icon {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+        .upload-zone:hover .upload-icon {
+            transform: translateY(-5px);
+        }
+        .upload-zone .upload-text {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #5956B3;
+        }
+        .upload-zone .upload-sub {
+            font-size: 0.8rem;
+            color: #888AC4;
+            font-weight: 500;
+        }
+        
+        /* Previsualización de Archivos */
+        .upload-zone.has-file { border-style: solid; border-color: #10B981; padding: 0; height: 180px; }
+        .upload-zone .preview-img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
+        .upload-zone .preview-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(45, 42, 74, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+            color: #FFFFFF;
+            padding: 1rem;
+        }
+        .upload-zone:hover .preview-overlay { opacity: 1; }
+        .btn-delete-preview {
+            background: #FF4D4D;
+            color: #FFFFFF;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+        }
+        .btn-delete-preview:hover { transform: scale(1.1); background: #E03333; }
+        .preview-name { font-size: 0.85rem; font-weight: 600; text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Efecto Shake por Validación */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+            20%, 40%, 60%, 80% { transform: translateX(6px); }
+        }
+        .form-group.has-error input,
+        .form-group.has-error select,
+        .form-group.has-error textarea {
+            border-color: #E1799F !important;
+            background-color: #FFF5F7 !important;
+            animation: shake 0.4s ease-in-out;
+            box-shadow: 0 0 0 4px rgba(225, 121, 159, 0.15) !important;
+        }
+        .error-message {
+            color: #E1799F;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Estilos de la Previsualización Dinámica (Paso 4) */
+        .preview-container { margin-top: 1rem; }
+        .preview-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid #DBB6EF;
+            box-shadow: 0 10px 30px rgba(89, 86, 179, 0.04);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .preview-header-banner {
+            background: linear-gradient(135deg, #F2E8F9, #EAE6F8);
+            padding: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            border-bottom: 1px dashed #DBB6EF;
+        }
+        @media (max-width: 600px) {
+            .preview-header-banner { flex-direction: column; text-align: center; }
+        }
+        .preview-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 8px 20px rgba(89, 86, 179, 0.15);
+            background: #E1799F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #FFFFFF;
+            font-weight: 800;
+            overflow: hidden;
+        }
+        .preview-title-info h2 {
+            font-size: 1.8rem;
+            color: #2D2A4A;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+        .preview-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .preview-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-rubro { background: #EAE6F8; color: #5956B3; }
+        .badge-comuna { background: #FBECF1; color: #E1799F; }
+        .preview-body { padding: 2.5rem; }
+        .preview-section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #5956B3;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .preview-bio { color: #69658A; line-height: 1.7; font-size: 1rem; margin-bottom: 2rem; white-space: pre-line; }
+
+        /* Productos Preview Grid */
+        .preview-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .preview-product-card { background: #F2E8F9; border-radius: 20px; overflow: hidden; border: 1px solid #DBB6EF; }
+        .preview-product-img { width: 100%; height: 140px; object-fit: cover; background: #EAE6F8; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #D2D0F0; overflow: hidden; }
+        .preview-product-info { padding: 1.2rem; }
+        .preview-product-name { font-weight: 800; font-size: 0.95rem; color: #2D2A4A; margin-bottom: 0.3rem; }
+        .preview-product-price { color: #E1799F; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.6rem; }
+        .preview-product-desc { font-size: 0.8rem; color: #69658A; line-height: 1.5; }
+
+        /* Processes Preview Timeline */
+        .preview-timeline { display: flex; flex-direction: column; gap: 1.5rem; }
+        .preview-timeline-step { display: flex; gap: 1.2rem; background: #F2E8F9; padding: 1.2rem; border-radius: 20px; border: 1px solid #DBB6EF; align-items: center; }
+        @media (max-width: 500px) { .preview-timeline-step { flex-direction: column; align-items: flex-start; } }
+        .preview-timeline-img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: #EAE6F8; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #D2D0F0; overflow: hidden; }
+        .preview-timeline-content h4 { font-weight: 800; font-size: 0.95rem; color: #2D2A4A; margin-bottom: 0.3rem; }
+        .preview-timeline-content p { font-size: 0.8rem; color: #69658A; line-height: 1.5; }
+
+        /* Estilos para Iconos PNG de Interfaz */
+        .sidebar-icon-img {
+            width: 48px;
+            height: 48px;
+            max-width: none;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.65;
+            transition: all 0.3s ease;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .nav-item:hover .sidebar-icon-img,
+        .nav-item.active .sidebar-icon-img {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .stepper-icon-img {
+            width: 44px;
+            height: 44px;
+            max-width: none;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .step.active .stepper-icon-img,
+        .step.completed .stepper-icon-img {
+            filter: brightness(0) invert(1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-layout">
+        
+        <!-- 1. Menú Lateral (Sidebar) -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <a href="/">
+                    <img src="/media/logos/Imagotipo%20para%20fondo%20oscuro.png" alt="Talento Mujer Logo">
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{% url 'panel_admin' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Dashboard.png" alt="Dashboard" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="{% url 'administrar_emprendedoras' %}" class="nav-item active">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Emprendedora.png" alt="Emprendedoras" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Emprendedoras</span>
+                </a>
+
+                <a href="{% url 'agregar_noticia' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Noticias</span>
+                </a>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <a href="{% url 'logout_admin' %}" class="nav-item" style="color: #DC7A96;">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Cerrar%20sesi%C3%B3n.png" alt="Cerrar Sesión" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 2. Área de Contenido Principal -->
+        <div class="main-content">
+            <header class="top-header">
+                <div class="page-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="toggle-sidebar-btn" id="sidebarToggle" aria-label="Ocultar Menú">☰</button>
+                    <h1>Módulo de Emprendedoras</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info">
+                        <span class="user-name">Administrador</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Cuerpo de la Página -->
+            <div class="content-body">
+                
+                {% if messages %}
+                    <div class="toast-container">
+                        {% for message in messages %}
+                            <div class="toast">
+                                <div style="display: flex; align-items: center;">
+                                    <span class="toast-icon">
+                                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    </span>
+                                    <span>{{ message }}</span>
+                                </div>
+                                <button type="button" class="toast-close" onclick="closeToast(this)">×</button>
+                                <div class="toast-progress"></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Formulario Paso a Paso (Wizard) -->
+                <form method="POST" enctype="multipart/form-data" id="wizard-form" novalidate {% if is_edit %}action="{% url 'editar_emprendedora' emprendedora.id %}" class="edit-mode"{% endif %}>
+                    {% csrf_token %}
+                    
+                    <!-- Inputs ocultos para registrar eliminaciones de productos/procesos -->
+                    <input type="hidden" name="deleted_productos" id="deleted_productos" value="">
+                    <input type="hidden" name="deleted_procesos" id="deleted_procesos" value="">
+
+                    <!-- Stepper Visual -->
+                    <div class="stepper">
+                        <div class="step active" data-step="1">
+                            <span class="step-num">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Emprendedora%20copia%20.png" alt="Perfil" class="stepper-icon-img">
+                            </span>
+                            <span class="step-label">Perfil</span>
+                        </div>
+                        <div class="step" data-step="2">
+                            <span class="step-num">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Producto%20copia.png" alt="Productos" class="stepper-icon-img">
+                            </span>
+                            <span class="step-label">Productos</span>
+                        </div>
+                        <div class="step" data-step="3">
+                            <span class="step-num">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Proceso%20copia.png" alt="Procesos" class="stepper-icon-img">
+                            </span>
+                            <span class="step-label">Procesos</span>
+                        </div>
+                        <div class="step" data-step="4">
+                            <span class="step-num">
+                                <img src="/media/Funcional/Funcional/Ojo%20visible.png" alt="Resumen" class="stepper-icon-img">
+                            </span>
+                            <span class="step-label">Resumen</span>
+                        </div>
+                        
+                        <!-- Línea de Progreso Superior -->
+                        <div class="step-line">
+                            <div class="step-line-fill" id="progress-line-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- PASO 1: Perfil de Emprendedora -->
+                    <div class="wizard-step active" id="step-1">
+                        <div class="form-card">
+                            <h3>
+                                {% if is_edit %}Editar Perfil: {{ emprendedora.nombre }}{% else %}1. Perfil de la Emprendedora{% endif %}
+                                {% if is_edit %}
+                                    <a href="{% url 'administrar_emprendedoras' %}" class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1.2rem; border-radius: 20px;">+ Registrar Nueva</a>
+                                {% endif %}
+                            </h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Nombre Completo *</label>
+                                    <input type="text" name="nombre" required placeholder="Ej: María Pérez" value="{% if is_edit %}{{ emprendedora.nombre }}{% endif %}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Territorio / Comuna *</label>
+                                    <select name="territorio" required>
+                                        <option value="" disabled {% if not is_edit %}selected{% endif %}>-- Elige una comuna --</option>
+                                        <option value="Los Ángeles" {% if is_edit and emprendedora.territorio == "Los Ángeles" %}selected{% endif %}>Los Ángeles</option>
+                                        <option value="Cabrero" {% if is_edit and emprendedora.territorio == "Cabrero" %}selected{% endif %}>Cabrero</option>
+                                        <option value="Laja" {% if is_edit and emprendedora.territorio == "Laja" %}selected{% endif %}>Laja</option>
+                                        <option value="Nacimiento" {% if is_edit and emprendedora.territorio == "Nacimiento" %}selected{% endif %}>Nacimiento</option>
+                                        <option value="Yumbel" {% if is_edit and emprendedora.territorio == "Yumbel" %}selected{% endif %}>Yumbel</option>
+                                        <option value="Negrete" {% if is_edit and emprendedora.territorio == "Negrete" %}selected{% endif %}>Negrete</option>
+                                        <option value="San Rosendo" {% if is_edit and emprendedora.territorio == "San Rosendo" %}selected{% endif %}>San Rosendo</option>
+                                        <option value="Santa Bárbara" {% if is_edit and emprendedora.territorio == "Santa Bárbara" %}selected{% endif %}>Santa Bárbara</option>
+                                        <option value="Mulchén" {% if is_edit and emprendedora.territorio == "Mulchén" %}selected{% endif %}>Mulchén</option>
+                                        <option value="Quilaco" {% if is_edit and emprendedora.territorio == "Quilaco" %}selected{% endif %}>Quilaco</option>
+                                        <option value="Alto Bio-Bio" {% if is_edit and emprendedora.territorio == "Alto Bio-Bio" %}selected{% endif %}>Alto Bio-Bio</option>
+                                        <option value="Antuco" {% if is_edit and emprendedora.territorio == "Antuco" %}selected{% endif %}>Antuco</option>
+                                        <option value="Tucapel" {% if is_edit and emprendedora.territorio == "Tucapel" %}selected{% endif %}>Tucapel</option>
+                                        <option value="Quilleco" {% if is_edit and emprendedora.territorio == "Quilleco" %}selected{% endif %}>Quilleco</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Rubro o Categoría *</label>
+                                    <input type="text" name="rubro" required placeholder="Ej: Artesanía en Greda" value="{% if is_edit %}{{ emprendedora.rubro }}{% endif %}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Foto de Perfil</label>
+                                    <input type="file" name="imagen_perfil" id="imagen_perfil" accept="image/*" style="display: none;">
+                                    <div class="upload-zone {% if is_edit and emprendedora.imagen_perfil %}has-file{% endif %}" data-input-id="imagen_perfil">
+                                        {% if is_edit and emprendedora.imagen_perfil %}
+                                            <img src="{{ emprendedora.imagen_perfil.url }}" class="preview-img" alt="Foto de Perfil">
+                                            <div class="preview-overlay">
+                                                <button type="button" class="btn-delete-preview" title="Eliminar imagen">×</button>
+                                                <span class="preview-name">foto_perfil.jpg</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="upload-prompt">
+                                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Emprendedora%20copia%20.png" alt="Perfil" class="upload-icon">
+                                                <span class="upload-text">Haz clic o arrastra para subir foto de perfil</span>
+                                                <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Historia / Descripción Detallada *</label>
+                                    <textarea name="historia" required placeholder="Describe la historia, motivaciones y detalles sobre la emprendedora...">{% if is_edit %}{{ emprendedora.historia }}{% endif %}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PASO 2: Agregar Productos -->
+                    <div class="wizard-step" id="step-2">
+                        {% if is_edit and emprendedora.productos.all %}
+                            <input type="hidden" name="total_productos" id="total_productos" value="{{ emprendedora.productos.count }}">
+                            <div id="productos-wrapper">
+                                {% for prod in emprendedora.productos.all %}
+                                    <div class="form-card" data-product-id="{{ prod.id }}">
+                                        <h3>
+                                            <span style="color: #5551A7;">Producto #{{ forloop.counter }}</span>
+                                            <button type="button" class="btn-remove" onclick="removeExistingProductCard(this, '{{ prod.id }}')">Eliminar</button>
+                                        </h3>
+                                        <!-- Campo oculto para ID del producto -->
+                                        <input type="hidden" name="prod_id_{{ forloop.counter }}" value="{{ prod.id }}">
+                                        
+                                        <div class="form-grid">
+                                            <div class="form-group">
+                                                <label>Nombre del Producto</label>
+                                                <input type="text" name="prod_nombre_{{ forloop.counter }}" value="{{ prod.nombre }}" placeholder="Ej: Vasija de Greda" class="prod-nombre">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Precio (CLP)</label>
+                                                <input type="number" step="0.01" name="prod_precio_{{ forloop.counter }}" value="{{ prod.precio|floatformat:0 }}" placeholder="Ej: 15000" class="prod-precio">
+                                            </div>
+                                            <div class="form-group full-width">
+                                                <label>Foto del Producto</label>
+                                                <input type="file" name="prod_imagen_{{ forloop.counter }}" id="prod_imagen_{{ forloop.counter }}" accept="image/*" style="display: none;">
+                                                <div class="upload-zone {% if prod.imagen %}has-file{% endif %}" data-input-id="prod_imagen_{{ forloop.counter }}">
+                                                    {% if prod.imagen %}
+                                                        <img src="{{ prod.imagen.url }}" class="preview-img" alt="{{ prod.nombre }}">
+                                                        <div class="preview-overlay">
+                                                            <button type="button" class="btn-delete-preview" title="Eliminar imagen">×</button>
+                                                            <span class="preview-name">imagen_producto.jpg</span>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="upload-prompt">
+                                                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Producto%20copia.png" alt="Producto" class="upload-icon">
+                                                            <span class="upload-text">Haz clic o arrastra para subir foto</span>
+                                                            <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group full-width">
+                                                <label>Descripción del Producto</label>
+                                                <textarea name="prod_descripcion_{{ forloop.counter }}" placeholder="Escribe los detalles..." style="min-height: 80px;" class="prod-descripcion">{{ prod.descripcion }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <input type="hidden" name="total_productos" id="total_productos" value="1">
+                            <div id="productos-wrapper">
+                                <div class="form-card">
+                                    <h3>2. Agregar un Producto (Opcional)</h3>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>Nombre del Producto</label>
+                                            <input type="text" name="prod_nombre_1" placeholder="Ej: Vasija de Greda" class="prod-nombre">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Precio (CLP)</label>
+                                            <input type="number" step="0.01" name="prod_precio_1" placeholder="Ej: 15000" class="prod-precio">
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label>Foto del Producto</label>
+                                            <input type="file" name="prod_imagen_1" id="prod_imagen_1" accept="image/*" style="display: none;">
+                                            <div class="upload-zone" data-input-id="prod_imagen_1">
+                                                <div class="upload-prompt">
+                                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Producto%20copia.png" alt="Producto" class="upload-icon">
+                                                    <span class="upload-text">Haz clic o arrastra para subir foto</span>
+                                                    <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label>Descripción del Producto</label>
+                                            <textarea name="prod_descripcion_1" placeholder="Escribe los detalles y características del producto..." style="min-height: 80px;" class="prod-descripcion"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div style="text-align: right; margin-top: -1rem; margin-bottom: 2rem;">
+                            <button type="button" class="btn-secondary" id="btn-add-producto">+ Agregar otro producto</button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 3: Etapas del Proceso -->
+                    <div class="wizard-step" id="step-3">
+                        {% if is_edit and emprendedora.procesos.all %}
+                            <input type="hidden" name="total_procesos" id="total_procesos" value="{{ emprendedora.procesos.count }}">
+                            <div id="procesos-wrapper">
+                                {% for proc in emprendedora.procesos.all %}
+                                    <div class="form-card" data-process-id="{{ proc.id }}">
+                                        <h3>
+                                            <span style="color: #5551A7;">Etapa #{{ forloop.counter }}</span>
+                                            <button type="button" class="btn-remove" onclick="removeExistingProcessCard(this, '{{ proc.id }}')">Eliminar</button>
+                                        </h3>
+                                        <!-- Campo oculto para ID del proceso -->
+                                        <input type="hidden" name="proc_id_{{ forloop.counter }}" value="{{ proc.id }}">
+                                        
+                                        <div class="form-grid">
+                                            <div class="form-group full-width">
+                                                <label>Título de la Etapa</label>
+                                                <input type="text" name="proc_titulo_{{ forloop.counter }}" value="{{ proc.titulo }}" placeholder="Ej: Selección de la Greda" class="proc-titulo">
+                                            </div>
+                                            <div class="form-group full-width">
+                                                <label>Foto de la Etapa</label>
+                                                <input type="file" name="proc_imagen_{{ forloop.counter }}" id="proc_imagen_{{ forloop.counter }}" accept="image/*" style="display: none;">
+                                                <div class="upload-zone {% if proc.imagen %}has-file{% endif %}" data-input-id="proc_imagen_{{ forloop.counter }}">
+                                                    {% if proc.imagen %}
+                                                        <img src="{{ proc.imagen.url }}" class="preview-img" alt="{{ proc.titulo }}">
+                                                        <div class="preview-overlay">
+                                                            <button type="button" class="btn-delete-preview" title="Eliminar imagen">×</button>
+                                                            <span class="preview-name">imagen_etapa.jpg</span>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="upload-prompt">
+                                                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Proceso%20copia.png" alt="Proceso" class="upload-icon">
+                                                            <span class="upload-text">Haz clic o arrastra para subir foto</span>
+                                                            <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group full-width">
+                                                <label>Descripción del trabajo en esta fase</label>
+                                                <textarea name="proc_descripcion_{{ forloop.counter }}" placeholder="Describe cómo trabaja..." style="min-height: 80px;" class="proc-descripcion">{{ proc.descripcion }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <input type="hidden" name="total_procesos" id="total_procesos" value="1">
+                            <div id="procesos-wrapper">
+                                <div class="form-card">
+                                    <h3>3. Etapa de Creación / Proceso (Opcional)</h3>
+                                    <div class="form-grid">
+                                        <div class="form-group full-width">
+                                            <label>Título de la Etapa</label>
+                                            <input type="text" name="proc_titulo_1" placeholder="Ej: Selección de la Greda" class="proc-titulo">
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label>Foto de la Etapa</label>
+                                            <input type="file" name="proc_imagen_1" id="proc_imagen_1" accept="image/*" style="display: none;">
+                                            <div class="upload-zone" data-input-id="proc_imagen_1">
+                                                <div class="upload-prompt">
+                                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Proceso%20copia.png" alt="Proceso" class="upload-icon">
+                                                    <span class="upload-text">Haz clic o arrastra para subir foto</span>
+                                                    <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label>Descripción del trabajo en esta fase</label>
+                                            <textarea name="proc_descripcion_1" placeholder="Describe cómo la emprendedora trabaja en esta fase del proceso..." style="min-height: 80px;" class="proc-descripcion"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div style="text-align: right; margin-top: -1rem; margin-bottom: 2rem;">
+                            <button type="button" class="btn-secondary" id="btn-add-proceso">+ Agregar otra etapa de proceso</button>
+                        </div>
+                    </div>
+
+                    <!-- PASO 4: Guardar y Resumen -->
+                    <div class="wizard-step" id="step-4">
+                        <div class="form-card">
+                            <h3>4. Vista Previa del Perfil</h3>
+                            <p style="color: #69658A; margin-bottom: 2rem; font-weight: 500; font-size: 0.95rem;">Así es como lucirá el perfil público en la web. Revísalo bien antes de presionar el botón de guardar.</p>
+                            
+                            <!-- Contenedor de Vista Previa Dinámica -->
+                            <div class="preview-container">
+                                <!-- Se llena dinámicamente con JavaScript -->
+                            </div>
+                            
+                            <div style="text-align: center; padding: 2rem 0 1rem; border-top: 2px dashed #F8F3FB; margin-top: 2rem;">
+                                <button type="submit" class="btn-submit" style="width: auto; padding: 1.2rem 3rem; font-size: 1.1rem; box-shadow: 0 10px 25px rgba(220, 122, 150, 0.35); display: inline-flex; align-items: center; gap: 0.8rem; justify-content: center;">
+                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Guardar%20copia.png" alt="Guardar" style="width: 24px; height: 24px; object-fit: contain; filter: brightness(0) invert(1);">
+                                    <span>{% if is_edit %}Actualizar Perfil Completo{% else %}Confirmar y Guardar Perfil{% endif %}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controles del Wizard -->
+                    <div class="wizard-controls">
+                        <button type="button" class="btn-secondary" id="btn-prev" style="visibility: hidden;">Anterior</button>
+                        <button type="button" class="btn-submit" id="btn-next">Siguiente</button>
+                    </div>
+                </form>
+
+                <!-- SECCIÓN 4: LISTA DE PERFILES -->
+                <div class="table-container" id="lista-perfiles">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 2px dashed #F8F3FB; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+                        <h3 style="color: #5551A7; font-size: 1.35rem; font-weight: 800; margin: 0;">Perfiles Registrados</h3>
+                        <div style="position: relative; width: 300px; max-width: 100%;">
+                            <input type="text" id="search-input" placeholder="Buscar por nombre, comuna o rubro..." style="padding: 0.7rem 1.2rem 0.7rem 2.8rem; font-size: 0.9rem; border-radius: 20px; background-color: #F8F3FB; border: 2px solid transparent; width: 100%; background-image: url('/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Buscar%20copia.png'); background-repeat: no-repeat; background-position: 1rem center; background-size: 1.2rem; outline: none;">
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Territorio</th>
+                                <th>Rubro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emp in emprendedoras %}
+                            <tr {% if is_edit and emprendedora.id == emp.id %}style="background-color: #FFF0F0;"{% endif %}>
+                                <td style="font-weight: 700; color: #2D2A4A;">
+                                    {{ emp.nombre }}
+                                    {% if is_edit and emprendedora.id == emp.id %}
+                                        <span style="font-size: 0.75rem; background: #DC7A96; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 8px;">Editando</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ emp.territorio }}</td>
+                                <td style="color: #69658A; font-size: 0.95rem;">{{ emp.rubro }}</td>
+                                <td class="action-buttons">
+                                    <a href="{% url 'perfil_emprendedora' emp.id %}" target="_blank" class="btn-sm btn-view">Ver Perfil</a>
+                                    <a href="{% url 'editar_emprendedora' emp.id %}" class="btn-sm btn-edit">Editar</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #69658A; padding: 4rem 2rem; font-size: 1.1rem; font-weight: 600; background: #F8F3FB; border-radius: 20px;">No hay registros o datos actuales en el sistema.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // Lógica de navegación del Formulario Paso a Paso (Wizard)
+        let currentStep = 1;
+        const totalSteps = 4;
+        
+        // Permite navegación directa en los pasos del stepper cuando se está editando
+        const isEditMode = {% if is_edit %}true{% else %}false{% endif %};
+        if (isEditMode) {
+            document.querySelectorAll('.step').forEach(stepEl => {
+                stepEl.addEventListener('click', () => {
+                    const targetStep = parseInt(stepEl.getAttribute('data-step'));
+                    if (targetStep && targetStep !== currentStep) {
+                        currentStep = targetStep;
+                        showStep(currentStep);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        if (currentStep === 4) {
+                            generateLivePreview();
+                        }
+                    }
+                });
+            });
+        }
+        
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const wizardForm = document.getElementById('wizard-form');
+        const fillLine = document.getElementById('progress-line-fill');
+        
+        function showStep(step) {
+            // Mostrar/ocultar contenedores de paso
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepEl = document.getElementById(`step-${i}`);
+                if (i === step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            }
+            
+            // Actualizar stepper visual
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((el, index) => {
+                const stepNum = index + 1;
+                el.classList.remove('active', 'completed');
+                
+                if (stepNum === step) {
+                    el.classList.add('active');
+                } else if (stepNum < step) {
+                    el.classList.add('completed');
+                }
+            });
+            
+            // Rellenar barra de progreso del stepper
+            const progressPercent = ((step - 1) / (totalSteps - 1)) * 100;
+            if (fillLine) {
+                fillLine.style.width = `${progressPercent}%`;
+            }
+            
+            // Controles de visibilidad de botones
+            btnPrev.style.visibility = step === 1 ? 'hidden' : 'visible';
+            
+            if (step === totalSteps) {
+                btnNext.style.display = 'none';
+            } else {
+                btnNext.style.display = 'block';
+                btnNext.textContent = 'Siguiente';
+            }
+        }
+        
+        btnNext.addEventListener('click', () => {
+            // Remover alertas de validación anteriores
+            const errorGroups = wizardForm.querySelectorAll('.form-group.has-error');
+            errorGroups.forEach(g => {
+                g.classList.remove('has-error');
+                const errText = g.querySelector('.error-message');
+                if (errText) errText.remove();
+            });
+
+            let isValid = true;
+
+            // Validación interactiva del Paso 1
+            if (currentStep === 1) {
+                const name = wizardForm.querySelector('input[name="nombre"]');
+                const rubro = wizardForm.querySelector('input[name="rubro"]');
+                const historia = wizardForm.querySelector('textarea[name="historia"]');
+                const territorio = wizardForm.querySelector('select[name="territorio"]');
+                
+                if (!name.value.trim()) {
+                    showFieldError(name, 'El nombre es obligatorio');
+                    isValid = false;
+                }
+                if (!territorio.value) {
+                    showFieldError(territorio, 'Debes seleccionar una comuna');
+                    isValid = false;
+                }
+                if (!rubro.value.trim()) {
+                    showFieldError(rubro, 'El rubro o categoría es obligatorio');
+                    isValid = false;
+                }
+                if (!historia.value.trim()) {
+                    showFieldError(historia, 'La historia o bio es obligatoria');
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                // Scroll suave al primer elemento inválido
+                const firstErr = wizardForm.querySelector('.form-group.has-error');
+                if (firstErr) {
+                    firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+            
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Si ingresa al paso 4 (Resumen), generar la previsualización en vivo
+                if (currentStep === 4) {
+                    generateLivePreview();
+                }
+            }
+        });
+        
+        btnPrev.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        function showFieldError(inputEl, message) {
+            const group = inputEl.closest('.form-group');
+            if (group) {
+                group.classList.add('has-error');
+                const error = document.createElement('div');
+                error.className = 'error-message';
+                error.innerHTML = `<span>⚠️</span> ${message}`;
+                group.appendChild(error);
+            }
+        }
+
+        // ==================== LÓGICA DE UPLOAD ZONES CON EVENT DELEGATION ====================
+        // Click en upload zone activa el input oculto
+        document.addEventListener('click', function(e) {
+            const uploadZone = e.target.closest('.upload-zone');
+            if (uploadZone) {
+                // Si hizo clic en el botón de eliminar vista previa, restaurar zona
+                if (e.target.closest('.btn-delete-preview')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const inputId = uploadZone.getAttribute('data-input-id');
+                    const fileInput = document.getElementById(inputId);
+                    if (fileInput) fileInput.value = ''; // Limpiar archivo
+                    restoreUploadZone(uploadZone);
+                    return;
+                }
+                const inputId = uploadZone.getAttribute('data-input-id');
+                const fileInput = document.getElementById(inputId);
+                if (fileInput) fileInput.click();
+            }
+        });
+
+        // Cambio del input de tipo file carga la vista previa
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'file' && e.target.accept.includes('image')) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    const uploadZone = document.querySelector(`.upload-zone[data-input-id="${e.target.id}"]`);
+                    if (uploadZone) {
+                        reader.onload = function(event) {
+                            showPreviewInZone(uploadZone, event.target.result, file.name);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+        });
+
+        // Eventos Drag & Drop
+        document.addEventListener('dragover', function(e) {
+            const zone = e.target.closest('.upload-zone');
+            if (zone) {
+                e.preventDefault();
+                zone.classList.add('drag-active');
+            }
+        });
+        document.addEventListener('dragleave', function(e) {
+            const zone = e.target.closest('.upload-zone');
+            if (zone) {
+                zone.classList.remove('drag-active');
+            }
+        });
+        document.addEventListener('drop', function(e) {
+            const zone = e.target.closest('.upload-zone');
+            if (zone) {
+                e.preventDefault();
+                zone.classList.remove('drag-active');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const inputId = zone.getAttribute('data-input-id');
+                    const fileInput = document.getElementById(inputId);
+                    if (fileInput) {
+                        fileInput.files = e.dataTransfer.files;
+                        const event = new Event('change', { bubbles: true });
+                        fileInput.dispatchEvent(event);
+                    }
+                }
+            }
+        });
+
+        function showPreviewInZone(zone, src, filename) {
+            zone.classList.add('has-file');
+            zone.innerHTML = `
+                <img src="${src}" class="preview-img" alt="${filename}">
+                <div class="preview-overlay">
+                    <button type="button" class="btn-delete-preview" title="Eliminar imagen">×</button>
+                    <span class="preview-name">${filename}</span>
+                </div>
+            `;
+        }
+
+        function restoreUploadZone(zone) {
+            zone.classList.remove('has-file');
+            const inputId = zone.getAttribute('data-input-id') || '';
+            let imgSrc = '';
+            let altText = '';
+            if (inputId === 'imagen_perfil') {
+                imgSrc = '/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Emprendedora%20copia%20.png';
+                altText = 'Perfil';
+            } else if (inputId.startsWith('prod_')) {
+                imgSrc = '/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Producto%20copia.png';
+                altText = 'Producto';
+            } else {
+                imgSrc = '/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Proceso%20copia.png';
+                altText = 'Proceso';
+            }
+            const isAvatar = inputId === 'imagen_perfil';
+            zone.innerHTML = `
+                <div class="upload-prompt">
+                    <img src="${imgSrc}" alt="${altText}" class="upload-icon">
+                    <span class="upload-text">Haz clic o arrastra para subir foto ${isAvatar ? 'de perfil' : ''}</span>
+                    <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                </div>
+            `;
+        }
+
+        // ==================== AGREGAR MÚLTIPLES PRODUCTOS / PROCESOS DINÁMICOS ====================
+        let prodCount = {% if is_edit %}{{ emprendedora.productos.count }}{% else %}1{% endif %};
+        const deletedProductos = [];
+        
+        document.getElementById('btn-add-producto').addEventListener('click', function() {
+            prodCount++;
+            document.getElementById('total_productos').value = prodCount;
+            
+            const wrapper = document.getElementById('productos-wrapper');
+            const newCard = document.createElement('div');
+            newCard.className = 'form-card';
+            newCard.innerHTML = `
+                <h3>
+                    <span style="color: #5551A7;">Producto Adicional #${prodCount}</span>
+                    <button type="button" class="btn-remove" onclick="this.closest('.form-card').remove(); updateProductIndices();">Eliminar</button>
+                </h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nombre del Producto</label>
+                        <input type="text" name="prod_nombre_${prodCount}" placeholder="Ej: Vasija de Greda" class="prod-nombre">
+                    </div>
+                    <div class="form-group">
+                        <label>Precio (CLP)</label>
+                        <input type="number" step="0.01" name="prod_precio_${prodCount}" placeholder="Ej: 15000" class="prod-precio">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Foto del Producto</label>
+                        <input type="file" name="prod_imagen_${prodCount}" id="prod_imagen_${prodCount}" accept="image/*" style="display: none;">
+                        <div class="upload-zone" data-input-id="prod_imagen_${prodCount}">
+                            <div class="upload-prompt">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Producto%20copia.png" alt="Producto" class="upload-icon">
+                                <span class="upload-text">Haz clic o arrastra para subir foto</span>
+                                <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Descripción del Producto</label>
+                        <textarea name="prod_descripcion_${prodCount}" placeholder="Escribe los detalles y características del producto..." style="min-height: 80px;" class="prod-descripcion"></textarea>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(newCard);
+            newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        function removeExistingProductCard(button, prodId) {
+            if (prodId) {
+                deletedProductos.push(prodId);
+                document.getElementById('deleted_productos').value = deletedProductos.join(',');
+            }
+            button.closest('.form-card').remove();
+            updateProductIndices();
+        }
+
+        let procCount = {% if is_edit %}{{ emprendedora.procesos.count }}{% else %}1{% endif %};
+        const deletedProcesos = [];
+
+        document.getElementById('btn-add-proceso').addEventListener('click', function() {
+            procCount++;
+            document.getElementById('total_procesos').value = procCount;
+            
+            const wrapper = document.getElementById('procesos-wrapper');
+            const newCard = document.createElement('div');
+            newCard.className = 'form-card';
+            newCard.innerHTML = `
+                <h3>
+                    <span style="color: #5551A7;">Etapa Adicional #${procCount}</span>
+                    <button type="button" class="btn-remove" onclick="this.closest('.form-card').remove(); updateProcessIndices();">Eliminar</button>
+                </h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Título de la Etapa</label>
+                        <input type="text" name="proc_titulo_${procCount}" placeholder="Ej: Selección de la Greda" class="proc-titulo">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Foto de la Etapa</label>
+                        <input type="file" name="proc_imagen_${procCount}" id="proc_imagen_${procCount}" accept="image/*" style="display: none;">
+                        <div class="upload-zone" data-input-id="proc_imagen_${procCount}">
+                            <div class="upload-prompt">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Proceso%20copia.png" alt="Proceso" class="upload-icon">
+                                <span class="upload-text">Haz clic o arrastra para subir foto</span>
+                                <span class="upload-sub">Formatos permitidos: JPG, PNG</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Descripción del trabajo en esta fase</label>
+                        <textarea name="proc_descripcion_${procCount}" placeholder="Describe cómo la emprendedora trabaja en esta fase del proceso..." style="min-height: 80px;" class="proc-descripcion"></textarea>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(newCard);
+            newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        function removeExistingProcessCard(button, procId) {
+            if (procId) {
+                deletedProcesos.push(procId);
+                document.getElementById('deleted_procesos').value = deletedProcesos.join(',');
+            }
+            button.closest('.form-card').remove();
+            updateProcessIndices();
+        }
+
+        function updateProductIndices() {
+            const cards = document.querySelectorAll('#productos-wrapper > .form-card');
+            cards.forEach((card, idx) => {
+                const titleSpan = card.querySelector('h3 span');
+                if (titleSpan) {
+                    if (idx === 0) {
+                        titleSpan.textContent = `2. Agregar un Producto (Opcional)`;
+                    } else {
+                        titleSpan.textContent = `Producto Adicional #${idx + 1}`;
+                    }
+                }
+            });
+        }
+
+        function updateProcessIndices() {
+            const cards = document.querySelectorAll('#procesos-wrapper > .form-card');
+            cards.forEach((card, idx) => {
+                const titleSpan = card.querySelector('h3 span');
+                if (titleSpan) {
+                    if (idx === 0) {
+                        titleSpan.textContent = `3. Etapa de Creación / Proceso (Opcional)`;
+                    } else {
+                        titleSpan.textContent = `Etapa Adicional #${idx + 1}`;
+                    }
+                }
+            });
+        }
+
+        // ==================== GENERAR PREVISUALIZACIÓN DE PERFIL EN VIVO (PASO 4) ====================
+        function generateLivePreview() {
+            const previewContainer = document.querySelector('.preview-container');
+            if (!previewContainer) return;
+
+            // Obtener valores del formulario
+            const nombre = wizardForm.querySelector('input[name="nombre"]').value.trim();
+            const rubro = wizardForm.querySelector('input[name="rubro"]').value.trim();
+            const territorio = wizardForm.querySelector('select[name="territorio"]').value;
+            const historia = wizardForm.querySelector('textarea[name="historia"]').value.trim();
+
+            // Obtener preview de la foto de perfil
+            const profileZone = document.querySelector('.upload-zone[data-input-id="imagen_perfil"]');
+            let profileImgHtml = '<div class="preview-avatar" style="display: flex; align-items: center; justify-content: center; background: #F2E8F9;"><img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Emprendedora.png" style="width: 50%; height: 50%; object-fit: contain;"></div>';
+            if (profileZone && profileZone.classList.contains('has-file')) {
+                const img = profileZone.querySelector('.preview-img');
+                if (img) {
+                    profileImgHtml = `<img src="${img.src}" alt="${nombre}" class="preview-avatar">`;
+                }
+            }
+
+            // Generar HTML para Productos
+            let productsHtml = '';
+            const productCards = document.querySelectorAll('#productos-wrapper > .form-card');
+            let hasProducts = false;
+
+            productCards.forEach((card) => {
+                const nameInput = card.querySelector('input.prod-nombre');
+                const name = nameInput ? nameInput.value.trim() : '';
+
+                if (name) {
+                    hasProducts = true;
+                    const priceInput = card.querySelector('input.prod-precio');
+                    const priceVal = priceInput ? parseFloat(priceInput.value) || 0 : 0;
+                    const priceStr = priceVal > 0 ? `$${priceVal.toLocaleString('es-CL')}` : 'Precio no especificado';
+
+                    const descInput = card.querySelector('textarea.prod-descripcion');
+                    const desc = descInput ? descInput.value.trim() : '';
+
+                    const zone = card.querySelector('.upload-zone');
+                    let pImgHtml = '<div class="preview-product-img" style="display: flex; align-items: center; justify-content: center; background: #F2E8F9;"><img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Producto%20lila.png" style="width: 50%; height: 50%; object-fit: contain;"></div>';
+                    if (zone && zone.classList.contains('has-file')) {
+                        const img = zone.querySelector('.preview-img');
+                        if (img) pImgHtml = `<img src="${img.src}" alt="${name}" class="preview-product-img">`;
+                    }
+
+                    productsHtml += `
+                        <div class="preview-product-card">
+                            ${pImgHtml}
+                            <div class="preview-product-info">
+                                <div class="preview-product-name">${name}</div>
+                                <div class="preview-product-price">${priceStr}</div>
+                                <div class="preview-product-desc">${desc || 'Sin descripción.'}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            // Generar HTML para Procesos
+            let processesHtml = '';
+            const processCards = document.querySelectorAll('#procesos-wrapper > .form-card');
+            let hasProcesses = false;
+
+            processCards.forEach((card, idx) => {
+                const titleInput = card.querySelector('input.proc-titulo');
+                const title = titleInput ? titleInput.value.trim() : '';
+
+                if (title) {
+                    hasProcesses = true;
+                    const descInput = card.querySelector('textarea.proc-descripcion');
+                    const desc = descInput ? descInput.value.trim() : '';
+
+                    const zone = card.querySelector('.upload-zone');
+                    let pImgHtml = '<div class="preview-timeline-img">⚙️</div>';
+                    if (zone && zone.classList.contains('has-file')) {
+                        const img = zone.querySelector('.preview-img');
+                        if (img) pImgHtml = `<img src="${img.src}" alt="${title}" class="preview-timeline-img">`;
+                    }
+
+                    processesHtml += `
+                        <div class="preview-timeline-step">
+                            ${pImgHtml}
+                            <div class="preview-timeline-content">
+                                <h4>Etapa ${idx + 1}: ${title}</h4>
+                                <p>${desc || 'Sin descripción del proceso.'}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            // Ensamblar todo el mock-up del perfil
+            previewContainer.innerHTML = `
+                <div class="preview-card">
+                    <div class="preview-header-banner">
+                        ${profileImgHtml}
+                        <div class="preview-title-info">
+                            <h2>${nombre || 'Nombre de la Emprendedora'}</h2>
+                            <div class="preview-badges">
+                                <span class="preview-badge badge-rubro">${rubro || 'Rubro o Categoría'}</span>
+                                <span class="preview-badge badge-comuna">📍 ${territorio || 'Comuna'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-section-title">📖 Mi Historia</div>
+                        <div class="preview-bio">${historia || 'No se ha ingresado una historia.'}</div>
+                        
+                        ${hasProcesses ? `
+                            <div class="preview-section-title" style="margin-top: 2.2rem; border-top: 1px dashed #EAE6F8; padding-top: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Proceso.png" style="width: 22px; height: 22px; object-fit: contain;">
+                                Mi Proceso de Creación
+                            </div>
+                            <div class="preview-timeline">
+                                ${processesHtml}
+                            </div>
+                        ` : ''}
+
+                        ${hasProducts ? `
+                            <div class="preview-section-title" style="margin-top: 2.5rem; border-top: 1px dashed #EAE6F8; padding-top: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Producto%20lila.png" style="width: 22px; height: 22px; object-fit: contain;">
+                                Mis Productos
+                            </div>
+                            <div class="preview-products-grid">
+                                ${productsHtml}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== BUSCADOR EN TIEMPO REAL PARA LA TABLA ====================
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('#lista-perfiles tbody tr');
+                
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length < 3) return; // Saltar fila de "no hay registros"
+                    
+                    const name = cells[0].textContent.toLowerCase();
+                    const territorio = cells[1].textContent.toLowerCase();
+                    const rubro = cells[2].textContent.toLowerCase();
+                    
+                    if (name.includes(query) || territorio.includes(query) || rubro.includes(query)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Cierre de notificaciones Toast
+        function closeToast(button) {
+            const toast = button.closest('.toast');
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 500);
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.toast').forEach(toast => {
+                setTimeout(() => {
+                    if (document.body.contains(toast)) closeToast(toast.querySelector('.toast-close'));
+                }, 5000);
+            });
+            // Inicializar el primer paso
+            showStep(1);
+        });
+
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const adminLayout = document.querySelector('.admin-layout');
+        if (toggleBtn && adminLayout) {
+            toggleBtn.addEventListener('click', () => {
+                adminLayout.classList.toggle('collapsed-sidebar');
+            });
+        }
+    </script>
+</body>
+</html>

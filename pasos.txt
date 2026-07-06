@@ -1,0 +1,15 @@
+Instala Xampp 
+Lo abres 
+Dale a start a apache y mysql 
+Cuando inicie los dos servicios dale a admin en mysql 
+A la izquierda sale un boton que dice nueva dale clic En el nombre de la base de datos pega esto "database" y dale crear 
+
+Escribe estos codigos en el terminal de visual Studio 
+
+pip install -r requirements.txt
+python manage.py makemigrations 
+python manage.py migrate
+python manage.py runserver
+
+Copia el link que te da el terminal 
+http://127.0.0.1:8000/

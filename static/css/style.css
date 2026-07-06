@@ -1,0 +1,196 @@
+/* Reseteo básico y tipografía */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* sans-serif limpia */
+    background-color: #F3F2F8; /* Fondo blanco o gris ultra claro */
+    color: #1A1A2E; /* Gris muy oscuro/morado oscuro */
+}
+
+/* 1. Cabecera */
+.top-header {
+    background-color: #5551A7; /* Morado profundo */
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area {
+    color: #FFFFFF;
+}
+
+.logo-title {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.logo-subtitle {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.search-box {
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    width: 300px; /* Alargada */
+}
+
+.search-icon {
+    color: #5551A7;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    color: #1A1A2E;
+    font-family: inherit;
+    width: 100%;
+}
+
+/* 2. Barra de Navegación */
+.main-navbar {
+    background-color: #F8F3FB; /* Blanco o lila muy claro */
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra ligera para separarla */
+}
+
+.main-navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.main-navbar a {
+    text-decoration: none;
+    color: #1A1A2E; /* Gris oscuro / morado oscuro */
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+.main-navbar a:hover, .main-navbar a:active {
+    color: #DC7A96;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+/* 3. Sección del Título Principal */
+.hero-section {
+    background: linear-gradient(135deg, #EABDC9, #9B6FD4); /* Degradado rosa pastel a lila claro */
+    padding: 120px 20px;
+    text-align: center;
+}
+
+.hero-section h1 {
+    font-size: 42px;
+    color: #1A1A2E;
+    margin-bottom: 15px;
+}
+
+.hero-section p {
+    font-size: 18px;
+    color: #1A1A2E; /* Alta legibilidad */
+}
+
+/* 4. Sección de Categorías de Productos */
+.categories-section {
+    background-color: #FFFFFF;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.categories-section h2 {
+    font-size: 36px;
+    color: #1A1A2E;
+    margin-bottom: 10px;
+}
+
+.categories-section p {
+    font-size: 16px;
+    color: #4A4A6A; /* Gris oscuro */
+}
+/* ==================== MAPA INTERACTIVO (CÓDIGO CORREGIDO) ==================== */
+.mapa-section { 
+    background-color: #FFFFFF; 
+    padding: 5rem 2rem; 
+    text-align: center;
+}
+.mapa-section h2 { font-size: 2.2rem; font-weight: 600; color: #1A1A2E; margin-bottom: 0.5rem; }
+.mapa-section > p { color: #4A4A6A; margin-bottom: 3rem; }
+
+/* Cambiamos a Grid para bloquear las dimensiones de forma estricta */
+.mapa-layout-wrapper { 
+    display: grid !important;
+    grid-template-columns: 65% 35% !important; /* 65% para el mapa, 35% para el texto */
+    gap: 40px !important;
+    max-width: 1200px !important; 
+    margin: 0 auto !important; 
+    align-items: center !important; 
+    width: 100% !important;
+}
+
+/* Forzamos la vista móvil si la pantalla es pequeña */
+@media (max-width: 900px) {
+    .mapa-layout-wrapper { 
+        grid-template-columns: 100% !important; 
+        gap: 2rem !important;
+    }
+    .mapa-container, .mapa-info-panel {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
+
+.mapa-container { 
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative !important; 
+    background-color: #FFFFFF !important; 
+    overflow: hidden !important; /* Corta a la fuerza cualquier vector invisible que estire el mapa a la derecha */
+}
+
+.mapa-info-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-left: 2px solid #5956B3 !important; 
+    padding-left: 2rem !important; 
+    text-align: left !important;
+    display: flex !important; 
+    flex-direction: column !important; 
+    gap: 2.5rem !important; 
+    background-color: #FFFFFF !important; /* Fondo blanco sólido para evitar superposiciones */
+    z-index: 5 !important;
+}
+
+.info-block .info-title { color: #C576E4; font-size: 1.25rem; font-weight: bold; margin-bottom: 0.8rem; line-height: 1.3; }
+.info-block .info-desc { color: #1A1A2E; font-size: 0.9rem; line-height: 1.5; font-weight: 600; }
+
+.map-subtitle-wrapper { text-align: right; padding: 0 10px 15px; color: #9B6FD4; font-weight: 600; }
+
+/* Aplastamos cualquier propiedad height/width interna que venga de Figma en el archivo Mapa.html */
+.biobio-map, .biobio-map svg, .mapa-container svg { 
+    width: 100% !important; 
+    height: auto !important; 
+    max-height: 550px !important; /* Evita el crecimiento infinito hacia abajo */
+    display: block !important;
+}
+
+.map-zone { cursor: pointer; }
+.map-zone .zone-shape, .map-zone.zone-shape { transition: fill 0.3s ease, filter 0.3s ease; }
+.map-zone:hover .zone-shape, .map-zone.zone-shape:hover { fill: #DC7A96 !important; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15)); }

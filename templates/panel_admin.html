@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Administración - Jefas de Hogar</title>
+    <link rel="icon" href="/media/logos/ISOTIPO.png" type="image/png" sizes="32x32 64x64">
+    <style>
+        /* --- ESTILO DASHBOARD SIDEBAR (Moderno, Lateral y Limpio) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: #F4F5FD; color: #2D2A4A; font-smoothing: antialiased; }
+        
+        /* Contenedor Principal Flex */
+        .admin-layout { display: flex; min-height: 100vh; }
+        
+        /* 1. Sidebar (Menú Lateral) */
+        .sidebar { 
+            width: 280px; 
+            background-color: #5956B3; 
+            color: #FFFFFF; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 2rem 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 4px 0 15px rgba(89, 86, 179, 0.08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            height: 100vh;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-logo { 
+            margin-bottom: 3rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            height: 70px;
+            overflow: hidden;
+        }
+        .sidebar-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-nav { display: flex; flex-direction: column; gap: 0.8rem; }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 1.2rem; 
+            padding: 1rem 1.5rem; 
+            color: #D2D0F0; 
+            text-decoration: none; 
+            font-weight: 700; 
+            border-radius: 30px; 
+            transition: all 0.3s ease; 
+        }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #FFFFFF; }
+        .nav-item.active { 
+            background: linear-gradient(135deg, #C07DE3, #E1799F); 
+            color: #FFFFFF; 
+            box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); 
+        }
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .nav-text { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 2. Área de Contenido de la Derecha */
+        .main-content { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Cabecera Superior */
+        .top-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1.5rem 3rem; 
+            background: #FFFFFF; 
+            box-shadow: 0 4px 15px rgba(89, 86, 179, 0.03); 
+        }
+        .toggle-sidebar-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #5956B3;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .toggle-sidebar-btn:hover {
+            background-color: #F8F3FB;
+        }
+        .admin-layout.collapsed-sidebar .sidebar {
+            transform: translateX(-280px);
+        }
+        .admin-layout.collapsed-sidebar .main-content {
+            margin-left: 0;
+        }
+        .page-info h1 { font-size: 1.5rem; color: #5956B3; font-weight: 800; }
+        .user-profile { display: flex; align-items: center; gap: 1rem; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2); }
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 800; color: #2D2A4A; font-size: 1rem; }
+        .user-role { color: #69658A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+        /* Área de Contenido Interno */
+        .content-body { padding: 3rem; }
+
+        /* Grid de Tarjetas de Métricas */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-bottom: 2.5rem; }
+        .metric-card { 
+            border-radius: 30px; 
+            padding: 2.2rem; 
+            color: #FFFFFF; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            box-shadow: 0 15px 30px rgba(89, 86, 179, 0.05); 
+            position: relative; 
+            overflow: hidden; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .metric-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(89, 86, 179, 0.1); }
+        
+        .card-pink { background: linear-gradient(135deg, #E1799F 0%, #F0B9CD 100%); }
+        .card-purple { background: linear-gradient(135deg, #5956B3 0%, #C07DE3 100%); }
+        .card-violet { background: linear-gradient(135deg, #2D2A4A 0%, #5956B3 100%); }
+        .card-lavender { background: linear-gradient(135deg, #888AC4 0%, #DBB6EF 100%); }
+        
+        .metric-info h3 { font-size: 0.95rem; text-transform: uppercase; font-weight: 700; opacity: 0.9; margin-bottom: 0.4rem; letter-spacing: 0.5px; }
+        .metric-info p { font-size: 2.5rem; font-weight: 900; line-height: 1; }
+        .metric-card-icon { font-size: 3rem; opacity: 0.3; }
+
+        /* Widgets en Grid */
+        .dashboard-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .widget-card { background: #FFFFFF; border-radius: 30px; padding: 2.5rem; border: 1px solid #DBB6EF; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); display: flex; flex-direction: column; }
+        .widget-card h3 { color: #5956B3; font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.8rem; }
+        
+        /* Gráfico de Barras CSS */
+        .chart-list { display: flex; flex-direction: column; gap: 1.2rem; }
+        .chart-item { display: flex; flex-direction: column; gap: 0.4rem; }
+        .chart-label-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.9rem; color: #2D2A4A; }
+        .chart-bar-outer { height: 12px; background: #F2E8F9; border-radius: 6px; overflow: hidden; width: 100%; border: 1px solid #DBB6EF; }
+        .chart-bar-inner { height: 100%; background: linear-gradient(90deg, #5956B3, #E1799F); border-radius: 6px; }
+
+        /* Accesos Rápidos */
+        .quick-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .action-button { 
+            background: #F2E8F9; 
+            border: 2px solid #DBB6EF; 
+            border-radius: 20px; 
+            padding: 1.2rem; 
+            text-decoration: none; 
+            color: #5956B3; 
+            font-weight: 800; 
+            font-size: 0.95rem; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.6rem; 
+            transition: all 0.3s ease; 
+            text-align: center;
+        }
+        .action-button:hover { background: #5956B3; border-color: #5956B3; color: #FFFFFF; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(89, 86, 179, 0.15); }
+        .action-button span:first-child { font-size: 1.8rem; display: flex; align-items: center; justify-content: center; }
+
+        /* Estilos para Iconos PNG de Interfaz */
+        .sidebar-icon-img {
+            width: 48px;
+            height: 48px;
+            max-width: none;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.65;
+            transition: all 0.3s ease;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .nav-item:hover .sidebar-icon-img,
+        .nav-item.active .sidebar-icon-img {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .metric-icon-img {
+            position: absolute;
+            right: -15px;
+            bottom: -15px;
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            opacity: 0.22;
+            filter: brightness(0) invert(1);
+            pointer-events: none;
+        }
+        
+        .widget-title-icon {
+            width: 44px;
+            height: 44px;
+            max-width: none;
+            vertical-align: middle;
+            display: inline-block;
+            margin: -10px 4px -10px -12px;
+        }
+        
+        .action-icon-img {
+            width: 68px;
+            height: 68px;
+            max-width: none;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            margin-bottom: -10px;
+            margin-top: -10px;
+        }
+        .action-button:hover .action-icon-img {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Actividad Reciente */
+        .full-width-widget { background: #FFFFFF; border-radius: 30px; padding: 2.5rem; border: 1px solid #DBB6EF; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); margin-bottom: 2.5rem; }
+        .full-width-widget h3 { color: #5956B3; font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.8rem; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; text-align: left; }
+        th { color: #69658A; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; padding: 0 1.2rem 0.5rem; border: none; }
+        td { background: #F2E8F9; padding: 1rem 1.2rem; border: none; font-size: 0.95rem; }
+        tr td:first-child { border-radius: 20px 0 0 20px; }
+        tr td:last-child { border-radius: 0 20px 20px 0; }
+        tbody tr:hover td { background: #FFFFFF; cursor: pointer; box-shadow: 0 8px 20px rgba(89, 86, 179, 0.05); }
+        .date-badge { font-size: 0.8rem; background: #EAE6F8; color: #5956B3; padding: 4px 10px; border-radius: 12px; font-weight: 700; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-layout">
+        
+        <!-- 1. Menú Lateral (Sidebar) -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <a href="/">
+                    <img src="/media/logos/Imagotipo%20para%20fondo%20oscuro.png" alt="Talento Mujer Logo">
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{% url 'panel_admin' %}" class="nav-item active">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Dashboard.png" alt="Dashboard" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="{% url 'administrar_emprendedoras' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Emprendedora.png" alt="Emprendedoras" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Emprendedoras</span>
+                </a>
+
+                <a href="{% url 'agregar_noticia' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Noticias</span>
+                </a>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <a href="{% url 'logout_admin' %}" class="nav-item" style="color: #DC7A96;">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Cerrar%20sesi%C3%B3n.png" alt="Cerrar Sesión" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 2. Área de Contenido Principal -->
+        <div class="main-content">
+            <header class="top-header">
+                <div class="page-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="toggle-sidebar-btn" id="sidebarToggle" aria-label="Ocultar Menú">☰</button>
+                    <h1>Dashboard - Vista General</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info">
+                        <span class="user-name">Administrador</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Cuerpo de la Página -->
+            <div class="content-body">
+                
+                <!-- Grid de Tarjetas de Métricas -->
+                <div class="metrics-grid">
+                    <div class="metric-card card-pink">
+                        <div class="metric-info">
+                            <h3>Emprendedoras</h3>
+                            <p>{{ total_emprendedoras }}</p>
+                        </div>
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Emprendedora.png" alt="Emprendedoras" class="metric-icon-img">
+                    </div>
+                    <div class="metric-card card-purple">
+                        <div class="metric-info">
+                            <h3>Productos</h3>
+                            <p>{{ total_productos }}</p>
+                        </div>
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Producto%20lila.png" alt="Productos" class="metric-icon-img">
+                    </div>
+                    <div class="metric-card card-violet">
+                        <div class="metric-info">
+                            <h3>Zonas / Comunas</h3>
+                            <p>{{ total_zonas }}</p>
+                        </div>
+                        <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Ubicaci%C3%B3n%20copia.png" alt="Zonas" class="metric-icon-img">
+                    </div>
+                    <div class="metric-card card-lavender">
+                        <div class="metric-info">
+                            <h3>Noticias</h3>
+                            <p>{{ total_noticias }}</p>
+                        </div>
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="metric-icon-img">
+                    </div>
+                </div>
+
+                <!-- Dashboard Widgets -->
+                <div class="dashboard-grid">
+                    <!-- Widget 1: Gráfico de Territorios -->
+                    <div class="widget-card">
+                        <h3>
+                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Ubicaci%C3%B3n%20copia.png" alt="Ubicación" class="widget-title-icon">
+                            Distribución por Comuna
+                        </h3>
+                        <div class="chart-list">
+                            {% for comuna in comunas_dist %}
+                            <div class="chart-item">
+                                <div class="chart-label-row">
+                                    <span>{{ comuna.territorio }}</span>
+                                    <span>{{ comuna.total }} Jefas de Hogar</span>
+                                </div>
+                                <div class="chart-bar-outer">
+                                    <div class="chart-bar-inner" style="width: {{ comuna.porcentaje }}%;"></div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p style="color: #69658A; font-weight: 500; text-align: center; padding: 2rem;">No hay registros de territorios todavía.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Widget 2: Accesos Rápidos -->
+                    <div class="widget-card">
+                        <h3><span>⚡</span> Acciones Rápidas</h3>
+                        <div class="quick-actions-grid">
+                            <a href="{% url 'administrar_emprendedoras' %}" class="action-button">
+                                <span>
+                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/A%C3%B1adir%20emprendedora%20copia.png" alt="Nueva Emprendedora" class="action-icon-img">
+                                </span>
+                                <span>Nueva Emprendedora</span>
+                            </a>
+                            <a href="{% url 'agregar_producto' %}" class="action-button">
+                                <span>
+                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/A%C3%B1adir%20producto%20copia.png" alt="Añadir Producto" class="action-icon-img">
+                                </span>
+                                <span>Añadir Producto</span>
+                            </a>
+                            <a href="{% url 'agregar_proceso' %}" class="action-button">
+                                <span>
+                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Proceso%20copia.png" alt="Añadir Proceso" class="action-icon-img">
+                                </span>
+                                <span>Añadir Proceso</span>
+                            </a>
+                            <a href="{% url 'agregar_noticia' %}" class="action-button">
+                                <span>
+                                    <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/A%C3%B1adir%20noticias%20copia.png" alt="Crear Noticia" class="action-icon-img">
+                                </span>
+                                <span>Crear Noticia</span>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla: Actividad Reciente -->
+                <div class="full-width-widget">
+                    <h3>
+                        <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Reloj%20copia.png" alt="Reloj" class="widget-title-icon">
+                        Últimas Emprendedoras Registradas
+                    </h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Rubro</th>
+                                <th>Comuna</th>
+                                <th>Fecha de Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emp in recent_emprendedoras %}
+                            <tr>
+                                <td style="font-weight: 800; color: #2D2A4A;">{{ emp.nombre }}</td>
+                                <td style="color: #69658A;">{{ emp.rubro }}</td>
+                                <td>{{ emp.territorio }}</td>
+                                <td><span class="date-badge">{{ emp.fecha_registro|date:"d M, Y - H:i" }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #69658A; padding: 3rem; font-weight: 600; background: #F8F3FB; border-radius: 20px;">No hay perfiles de emprendedoras cargados todavía.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const adminLayout = document.querySelector('.admin-layout');
+        if (toggleBtn && adminLayout) {
+            toggleBtn.addEventListener('click', () => {
+                adminLayout.classList.toggle('collapsed-sidebar');
+            });
+        }
+    </script>
+</body>
+</html>

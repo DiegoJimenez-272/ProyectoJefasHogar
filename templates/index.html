@@ -1,0 +1,2439 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Colaborativa Talento de Mujer</title>
+    <link rel="icon" href="/media/logos/ISOTIPO.png" type="image/png" sizes="32x32 64x64">
+    <style>
+        /* ==================== ESTILOS BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #F3F2F8;
+            color: #1A1A2E;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ==================== CONTENEDOR PRINCIPAL ==================== */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ==================== MENU UNIFICADO (FLOTANTE) ==================== */
+        .unified-header-container {
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 20px auto 0;
+        }
+
+        .unified-header {
+            background-color: #FFFFFF;
+            border-radius: 50px;
+            padding: 0 2rem;
+            height: 70px; /* Altura delgada de la barra */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.12);
+            border: 1px solid #EAE6F8;
+        }
+
+        .unified-header .logo-area {
+            display: flex;
+            align-items: center;
+            width: 240px; /* Ancho fijo para equilibrar la barra de búsqueda */
+            height: 45px; /* Altura controlada y estricta */
+            overflow: hidden; /* Corta de raíz cualquier desborde */
+        }
+
+
+        .unified-header .logo-area img {
+            width: 100%; /* Forzamos a que respete el contenedor */
+            height: 100%; /* Forzamos a que respete el contenedor */
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.70); /* Reduce el tamaño visual del logo a 70% */
+        }
+
+        .unified-header .logo-area:hover img {
+            opacity: 0.8; /* Alternativa interactiva segura que no deforma la caja */
+        }
+
+        .unified-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .unified-nav .nav-link {
+            color: #4A4A6A;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-block;
+            padding: 0.5rem 0;
+            transition: color 0.2s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .unified-nav .nav-item:hover .nav-link {
+            color: #5551A7;
+            transform: translateY(-3px);
+        }
+
+        .dropdown-arrow {
+            font-size: 0.8em;
+            margin-left: 4px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .unified-nav .nav-item:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Contenedor derecho para equilibrar el Header */
+        .search-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 240px; /* Mantiene el espacio reservado para la animación */
+            gap: 1rem;
+        }
+
+        /* Botón Hamburguesa Móvil (Oculto en Desktop) */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #5551A7;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: transform 0.3s ease;
+        }
+
+        /* Buscador Expandible Animado */
+        .expandable-search {
+            display: flex;
+            align-items: center;
+            background-color: #F8F3FB;
+            border-radius: 30px;
+            padding: 8px;
+            width: 42px; /* Ancho inicial (solo se ve el círculo del icono) */
+            height: 42px;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .expandable-search:hover, .expandable-search:focus-within {
+            width: 240px; /* Ancho al expandirse */
+            background-color: #FFFFFF;
+            border-color: #DCBBED;
+            box-shadow: 0 4px 15px rgba(85, 81, 167, 0.1);
+            cursor: text;
+        }
+
+        .expandable-search .search-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            margin-left: 1px;
+        }
+
+        .expandable-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            padding-left: 12px;
+            color: #1A1A2E;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .expandable-search:hover input, .expandable-search:focus-within input {
+            opacity: 1;
+            pointer-events: auto;
+            transition-delay: 0.1s;
+        }
+        
+        @media (max-width: 900px) {
+            .unified-header {
+                position: relative;
+            }
+            .unified-header .logo-area {
+                width: auto;
+                max-width: 160px;
+                min-width: 120px;
+            }
+            .search-area {
+                min-width: auto;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .unified-nav {
+                position: absolute;
+                top: 85px;
+                left: 0;
+                right: 0;
+                background: #FFFFFF;
+                border-radius: 24px;
+                box-shadow: 0 15px 35px rgba(85, 81, 167, 0.15);
+                border: 1px solid #EAE6F8;
+                padding: 1.5rem;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-15px);
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .unified-nav.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+            .unified-nav ul {
+                flex-direction: column;
+                gap: 1.2rem;
+                align-items: center;
+            }
+            .expandable-search:hover, .expandable-search:focus-within {
+                width: 180px;
+            }
+            /* Convierte los submenús flotantes en menús estáticos en móvil */
+            .dropdown-menu {
+                position: static;
+                transform: none !important;
+                box-shadow: none;
+                border: none;
+                background: #F8F3FB;
+                margin-top: 10px;
+                display: none;
+            }
+            .nav-item:hover .dropdown-menu, .nav-item:focus-within .dropdown-menu {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .expandable-search:hover, .expandable-search:focus-within {
+                width: 140px; /* Evita desbordamiento de la lupa en teléfonos muy pequeños */
+            }
+        }
+
+        /* Dropdown con movimiento elástico garantizado */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px) scale(0.95);
+            /* Posición inicial escondida */
+            background: #FFFFFF;
+            min-width: 250px;
+            max-height: 280px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 16px;
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(85, 81, 167, 0.15);
+            border: 1px solid #DCBBED;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Custom scrollbar for dropdown menu */
+        .dropdown-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+        .dropdown-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dropdown-menu::-webkit-scrollbar-thumb {
+            background: #DCBBED;
+            border-radius: 10px;
+        }
+        .dropdown-menu::-webkit-scrollbar-thumb:hover {
+            background: #C07DE3;
+        }
+
+        .dropdown-menu::before {
+            content: "";
+            position: absolute;
+            top: -30px;
+            bottom: -30px;
+            left: -40px;
+            right: -40px;
+            z-index: -1;
+        }
+
+        .nav-item:hover .dropdown-menu,
+        .nav-item.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(5px) scale(1);
+            /* Posición final con rebote */
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1.5rem;
+            color: #4A4A6A;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #F8F3FB;
+            color: #DC7A96;
+        }
+
+        /* ==================== CLASES GLOBALES DE SECCIÓN (PROMPTS) ==================== */
+        .section-header {
+            text-align: center;
+            padding: 0 1rem;
+            margin: 4rem auto 1.5rem;
+            max-width: 900px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: #1a1a1a;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: #4A4A6A;
+            font-size: 1.05rem;
+        }
+
+        .section-body-box {
+            width: 100%;
+            background-color: #F3F2F8;
+            padding: 4rem 0;
+            box-sizing: border-box;
+        }
+
+        .inner-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* ==================== HERO SECTION (REDISEÑADO) ==================== */
+        .hero-section {
+            background: radial-gradient(circle at 50% 50%, #F5F2FC 0%, #F4F5FD 100%);
+            padding: 6.5rem 0 10.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Elementos Decorativos de Fondo (Mesh Gradient & Vectores) */
+        .hero-bg-shape {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+        }
+
+        .shape-blob-1 {
+            top: -10%;
+            left: 20%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(225, 121, 159, 0.16) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: pulseBg 14s ease-in-out infinite alternate;
+        }
+
+        .shape-blob-2 {
+            bottom: -15%;
+            left: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(89, 86, 179, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: pulseBg 18s ease-in-out infinite alternate 2s;
+        }
+
+        .shape-blob-3 {
+            top: 20%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(192, 125, 227, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(45px);
+            animation: pulseBg 16s ease-in-out infinite alternate 1s;
+        }
+
+        .shape-ring-1 {
+            top: 10%;
+            left: 8%;
+            width: 140px;
+            height: 140px;
+            border: 2px dashed rgba(89, 86, 179, 0.12);
+            border-radius: 50%;
+            animation: rotateSlow 30s linear infinite;
+        }
+
+        .shape-ring-2 {
+            bottom: 8%;
+            left: 45%;
+            width: 200px;
+            height: 200px;
+            border: 1.5px solid rgba(225, 121, 159, 0.12);
+            border-radius: 50%;
+        }
+
+        .shape-ring-2::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 1px dashed rgba(225, 121, 159, 0.08);
+            border-radius: 50%;
+            animation: rotateSlow 25s linear infinite reverse;
+        }
+
+        .shape-ring-3 {
+            top: 25%;
+            right: 15%;
+            width: 90px;
+            height: 90px;
+            border: 2px dotted rgba(192, 125, 227, 0.15);
+            border-radius: 50%;
+        }
+
+        /* Rama de hojas izquierda en el fondo */
+        .deco-leaf-left-svg {
+            position: absolute;
+            bottom: -30px;
+            left: -40px;
+            width: 240px;
+            height: 240px;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.8;
+            z-index: 1;
+            transform: rotate(-15deg);
+        }
+
+        @keyframes pulseBg {
+            0% {
+                transform: scale(1) translate(0px, 0px);
+            }
+            100% {
+                transform: scale(1.2) translate(20px, -20px);
+            }
+        }
+
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            color: #2D2A4A;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .title-line-1 {
+            font-weight: 700;
+            color: #2D2A4A;
+        }
+
+        .title-line-2 {
+            font-weight: 800;
+            color: #2D2A4A;
+        }
+
+        .hero-divider {
+            width: 75px;
+            height: 6px;
+            background: linear-gradient(90deg, #E1799F 0%, #C07DE3 100%);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #4A4A6A;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            max-width: 520px;
+            text-align: left;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: #E1799F;
+            color: #FFFFFF;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 8px 20px rgba(225, 121, 159, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #c95c83;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(225, 121, 159, 0.45);
+            color: #FFFFFF;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #5956B3;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid #5956B3;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(89, 86, 179, 0.05);
+            transform: translateY(-2px);
+            color: #5956B3;
+        }
+
+        .heart-icon {
+            width: 18px;
+            height: 18px;
+            stroke: #5956B3;
+            transition: transform 0.3s ease, stroke 0.3s ease;
+        }
+
+        .btn-secondary:hover .heart-icon {
+            transform: scale(1.2);
+            stroke: #E1799F;
+        }
+
+        /* --- COLUMNA DERECHA (COMPOSICIÓN ORGÁNICA) --- */
+        .hero-right {
+            position: relative;
+            height: 450px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+
+        /* Blob principal */
+        .blob-wrapper {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, #DBB6EF 0%, #C07DE3 100%);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(89, 86, 179, 0.15);
+            animation: morphBlob 12s ease-in-out infinite alternate;
+            z-index: 2;
+        }
+
+        .blob-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&h=600&fit=crop');
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .blob-wrapper:hover .blob-image {
+            transform: scale(1.05);
+        }
+
+        @keyframes morphBlob {
+            0% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            50% {
+                border-radius: 50% 60% 40% 60% / 50% 40% 60% 50%;
+            }
+            100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+        }
+
+        /* Círculos flotantes */
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .floating-circle:hover {
+            transform: scale(1.08) translateY(-5px);
+            z-index: 10;
+        }
+
+        .circle-pottery {
+            width: 145px;
+            height: 145px;
+            top: 0px;
+            right: -30px;
+            animation: floatSlow 6s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        .circle-macrame {
+            width: 155px;
+            height: 155px;
+            bottom: 30px;
+            right: 80px;
+            animation: floatSlow 8s ease-in-out infinite 1s;
+            z-index: 4;
+        }
+
+        /* Tarjeta de información flotante */
+        .floating-badge {
+            position: absolute;
+            bottom: 10px;
+            right: -45px;
+            background-color: #FFFFFF;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(89, 86, 179, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 170px;
+            z-index: 5;
+            border: 1px solid rgba(219, 182, 239, 0.3);
+            animation: floatSlow 7s ease-in-out infinite 0.5s;
+            transition: transform 0.3s ease;
+        }
+
+        .floating-badge:hover {
+            transform: translateY(-5px);
+        }
+
+        .badge-icon {
+            background-color: #F2E8F9;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .badge-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .badge-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .badge-label {
+            color: #6C6A8D;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-number {
+            color: #5956B3;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .badge-sublabel {
+            color: #6C6A8D;
+            font-size: 0.7rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* Elementos decorativos */
+        .deco-leaf-svg {
+            position: absolute;
+            top: -20px;
+            right: -100px;
+            width: 250px;
+            height: 250px;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.75;
+            z-index: 1;
+        }
+
+        .deco-dots {
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: grid;
+            grid-template-columns: repeat(3, 10px);
+            gap: 12px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .deco-dots .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #C07DE3;
+            border-radius: 50%;
+        }
+
+        .deco-dots .dot:nth-child(1) { grid-column: 2; grid-row: 1; }
+        .deco-dots .dot:nth-child(2) { grid-column: 1; grid-row: 2; }
+        .deco-dots .dot:nth-child(3) { grid-column: 2; grid-row: 2; }
+        .deco-dots .dot:nth-child(4) { grid-column: 3; grid-row: 2; }
+        .deco-dots .dot:nth-child(5) { grid-column: 2; grid-row: 3; }
+
+        @keyframes floatSlow {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Brillo detrás del blob principal */
+        .blob-glow {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(225, 121, 159, 0.22) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+            filter: blur(40px);
+            left: -10px;
+            top: -10px;
+            pointer-events: none;
+            animation: floatSlow 7s ease-in-out infinite alternate;
+        }
+
+        /* Divisor de onda en la parte inferior del Hero */
+        .hero-bottom-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .hero-bottom-wave svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 60px;
+        }
+
+        .hero-bottom-wave .shape-fill {
+            fill: #F3F2F8; /* Mezcla con el color de fondo general de la página */
+        }
+
+        /* --- RESPONSIVIDAD --- */
+        @media (max-width: 991px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 4rem;
+            }
+            .hero-left {
+                align-items: center;
+            }
+            .hero-title {
+                text-align: center;
+                font-size: 2.8rem;
+                align-items: center;
+            }
+            .hero-divider {
+                margin: 0 auto 2rem;
+            }
+            .hero-description {
+                text-align: center;
+                margin: 0 auto 2.5rem;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero-right {
+                height: 380px;
+                max-width: 450px;
+                margin: 0 auto;
+                padding-left: 0;
+                justify-content: center;
+            }
+            .blob-wrapper {
+                width: 280px;
+                height: 280px;
+            }
+            .circle-pottery {
+                width: 110px;
+                height: 110px;
+                top: 0px;
+                right: 20px;
+            }
+            .circle-macrame {
+                width: 120px;
+                height: 120px;
+                bottom: 20px;
+                right: 120px;
+            }
+            .floating-badge {
+                bottom: -10px;
+                right: 20px;
+                width: 150px;
+                padding: 12px;
+            }
+            .deco-leaf-svg {
+                right: 0px;
+                width: 180px;
+                height: 180px;
+            }
+            .deco-dots {
+                display: none;
+            }
+        }
+
+
+        /* ==================== CATEGORÍAS ==================== */
+
+        .carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .carousel-track-outer {
+            overflow: hidden;
+            padding: 2.5rem 1.5rem;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            align-items: center;
+        }
+
+        .category-card {
+            flex: 0 0 200px;
+            height: 240px;
+            background-color: #FFFFFF;
+            border: 2px solid #DCBBED;
+            border-radius: 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.3);
+            border-color: #DC7A96;
+        }
+
+        .category-image {
+            width: 100%;
+            height: 170px;
+            border-top-left-radius: 22px;
+            border-top-right-radius: 22px;
+            overflow: hidden;
+            background-color: #F3F2F8;
+        }
+
+        .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-floating-icon {
+            position: absolute;
+            top: 170px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background-color: #FFFFFF;
+            border: 3px solid #5551A7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 2;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .category-card:hover .category-floating-icon {
+            border-color: #DC7A96;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Animación suave para el cambio de íconos */
+        .category-floating-icon img {
+            transition: opacity 0.3s ease;
+        }
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        .category-title {
+            margin-top: 26px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1A1A2E;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        /* --- Efecto 3D y Destellos para las Flechas --- */
+        .carousel-btn {
+            --color: #5551A7;
+            --shadow: #5E55A9;
+            --glare: rgba(255, 255, 255, 0.85);
+            --font-size: 2.5rem;
+            --hover: 0.4;
+            --pos: 0;
+
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            text-decoration: none;
+        }
+
+        .carousel-btn.prev {
+            left: -25px;
+        }
+
+        .carousel-btn.next {
+            right: -25px;
+        }
+
+        .carousel-btn:hover {
+            --hover: 1;
+            --pos: 1;
+        }
+
+        .carousel-btn:active {
+            --hover: 0;
+        }
+
+        .carousel-btn:active .btn-text:last-of-type {
+            --hover: 0;
+            --pos: 1;
+        }
+
+        .carousel-btn .btn-text {
+            position: absolute;
+            display: inline-block;
+            font-size: var(--font-size);
+            transition: all 0.2s;
+            color: transparent;
+            text-shadow:
+                calc(var(--hover) * (var(--font-size) * -0.02)) calc(var(--hover) * (var(--font-size) * 0.02)) var(--shadow),
+                calc(var(--hover) * (var(--font-size) * -0.04)) calc(var(--hover) * (var(--font-size) * 0.04)) var(--shadow),
+                calc(var(--hover) * (var(--font-size) * -0.06)) calc(var(--hover) * (var(--font-size) * 0.06)) var(--shadow),
+                calc(var(--hover) * (var(--font-size) * -0.08)) calc(var(--hover) * (var(--font-size) * 0.08)) var(--shadow);
+            transform: translate(calc(var(--hover) * (var(--font-size) * 0.10)), calc(var(--hover) * (var(--font-size) * -0.10)));
+        }
+
+        .carousel-btn .btn-text:last-of-type {
+            background: linear-gradient(108deg, transparent 0 55%, var(--glare) 55% 60%,
+                    transparent 60% 70%, var(--glare) 70% 85%, transparent 85%) calc(var(--pos) * -200%) 0% / 200% 100%, var(--color);
+            -webkit-background-clip: text;
+            color: transparent;
+            z-index: 2;
+            text-shadow: none;
+            transition: transform 0.2s, background-position 0s;
+        }
+
+        .carousel-btn:hover .btn-text:last-of-type {
+            transition: transform 0.2s, background-position calc(var(--hover) * 1.5s) calc(var(--hover) * 0.25s);
+        }
+
+        /* Animación de destellos (Sparkles) */
+        .carousel-btn svg {
+            position: absolute;
+            z-index: 3;
+            width: calc(var(--font-size) * 0.5);
+            aspect-ratio: 1;
+            --delay-step: 0.15;
+            top: calc(var(--y, 50) * 1%);
+            left: calc(var(--x, 0) * 1%);
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+        }
+
+        .carousel-btn svg path {
+            fill: #EABDC9;
+        }
+
+        /* Estrellas rosadas */
+        .carousel-btn:hover svg {
+            animation: sparkle 0.75s calc((var(--delay-step) * var(--d)) * 1s) both;
+        }
+
+        @keyframes sparkle {
+            50% {
+                transform: translate(-50%, -50%) scale(var(--s, 1));
+            }
+        }
+
+        .carousel-btn svg:nth-of-type(1) {
+            --x: -10;
+            --y: 10;
+            --s: 1.1;
+            --d: 1;
+        }
+
+        .carousel-btn svg:nth-of-type(2) {
+            --x: 10;
+            --y: 90;
+            --s: 1.25;
+            --d: 2;
+        }
+
+        .carousel-btn svg:nth-of-type(3) {
+            --x: 50;
+            --y: -10;
+            --s: 1.1;
+            --d: 3;
+        }
+
+        .carousel-btn svg:nth-of-type(4) {
+            --x: 90;
+            --y: 80;
+            --s: 0.9;
+            --d: 2;
+        }
+
+        .carousel-btn svg:nth-of-type(5) {
+            --x: 110;
+            --y: 20;
+            --s: 0.8;
+            --d: 4;
+        }
+
+        .carousel-tagline {
+            margin-top: 2.5rem;
+            font-size: 0.95rem;
+            color: #1a1a1a;
+            line-height: 1.55;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
+
+        /* ==================== NOTICIAS ==================== */
+        .noticias-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+
+        .news-card {
+            display: flex;
+            flex-direction: column;
+            background-color: #FFFFFF;
+            border: 1px solid #EAE6F8;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(85, 81, 167, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        @media (min-width: 768px) {
+            .news-card {
+                flex-direction: row;
+                height: 220px; /* Fixed height for all news cards on desktop */
+            }
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(85, 81, 167, 0.15);
+        }
+
+        .news-image-container {
+            background-color: #9B6FD4;
+            height: 200px; /* Fixed image height on mobile */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .news-image-container {
+                width: 300px;
+                height: 100%; /* Fill the fixed card height */
+                flex-shrink: 0;
+            }
+        }
+
+        .news-content {
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: #5551A7;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            color: #1A1A2E;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 1; /* Clamp title to 1 line on desktop */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-description {
+            font-size: 1rem;
+            color: #4A4A6A;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Clamp content to 3 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .btn-ver-mas-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .btn-ver-mas {
+            display: inline-block;
+            background-color: #5551A7;
+            color: #FFFFFF;
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn-ver-mas:hover {
+            background-color: #DC7A96;
+        }
+
+        /* ==================== PROPÓSITO ==================== */
+        .proposito-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .proposito-texto {
+            flex: 1;
+            text-align: left;
+        }
+
+        .proposito-texto p {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .proposito-texto strong {
+            color: #DC7A96;
+            font-weight: bold;
+        }
+
+        .proposito-imagen-container {
+            flex: 1;
+            background-color: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #DCBBED;
+            color: #5551A7;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* --- Responsive para dispositivos móviles --- */
+        @media (max-width: 768px) {
+            .carousel-track {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .carousel-btn {
+                display: none;
+            }
+
+            .category-card.clone {
+                display: none !important;
+            }
+
+            .proposito-layout {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .proposito-texto {
+                text-align: center;
+            }
+        }
+
+        /* ==================== MAPA INTERACTIVO ==================== */
+        .mapa-layout-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        @media (min-width: 900px) {
+            .mapa-layout-wrapper {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .mapa-container {
+            flex: 1.6;
+            width: 100%;
+            position: relative;
+            background-color: #FFFFFF;
+        }
+
+        .mapa-info-panel {
+            flex: 1;
+            border-left: 2px solid #5551A7;
+            padding-left: 2rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            margin-top: 50px;
+        }
+
+        .info-block .info-title {
+            color: #5551A7;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .info-block .info-desc {
+            color: #1A1A2E;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* Estilos SVG inyectados desde Mapa.html */
+        .biobio-map,
+        .mapa-container svg {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 550px !important;
+            display: block !important;
+        }
+
+        .map-zone {
+            cursor: pointer;
+        }
+
+        .map-zone .zone-shape, .map-zone.zone-shape {
+            transition: fill 0.3s ease, filter 0.3s ease;
+        }
+
+        .map-zone:hover .zone-shape, .map-zone.zone-shape:hover {
+            fill: #DC7A96 !important;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15));
+        }
+        
+        /* Zonas Inactivas del Mapa (Grises) */
+        .map-zone.zona-inactiva .zone-shape, .map-zone.zona-inactiva.zone-shape {
+            opacity: 0.6;
+            filter: grayscale(100%);
+        }
+        .map-zone.zona-activa .zone-shape, .map-zone.zona-activa.zone-shape {
+            filter: drop-shadow(0 0 3px rgba(220, 122, 150, 0.3));
+        }
+
+        /* Tooltip */
+        .map-tooltip {
+            position: absolute;
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 24px rgba(85, 81, 167, 0.25);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            text-align: left;
+            z-index: 10;
+            min-width: 220px;
+            border: 1px solid #DCBBED;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .map-tooltip.active {
+            opacity: 1;
+        }
+
+        .tooltip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #DCBBED;
+            padding-bottom: 6px;
+        }
+
+        .tooltip-title-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tooltip-title {
+            color: #5551A7;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .tooltip-count {
+            color: #1A1A2E;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .tooltip-tag {
+            background-color: #5551A7;
+            color: #FFFFFF;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .tooltip-desc {
+            font-size: 0.85rem;
+            color: #4A4A6A;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* ==================== FOOTER ==================== */
+        .main-footer {
+            background-color: #5551A7;
+            color: #FFFFFF;
+            padding: 1.5rem 1rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .footer-top {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-top {
+                grid-template-columns: 1.5fr 1fr 1fr 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .brand-col h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .brand-col p {
+            line-height: 1.4;
+            opacity: 0.9;
+            padding-right: 1rem;
+        }
+
+        .footer-col h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #DCBBED;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.3rem;
+        }
+
+        .footer-col ul a {
+            color: #FFFFFF;
+            opacity: 0.85;
+            transition: opacity 0.2s, color 0.2s;
+        }
+
+        .footer-col ul a:hover {
+            opacity: 1;
+            color: #DC7A96;
+        }
+
+        .footer-divider {
+            margin: 1.5rem auto 1rem;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            max-width: 1100px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .social-icon {
+            width: 48px;
+            height: 48px;
+            background-color: transparent;
+            border: none;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .social-icon:hover img {
+            filter: brightness(1.15);
+        }
+
+        .credits {
+            opacity: 0.8;
+            font-size: 0.75rem;
+        }
+
+
+        /* ==================== DROPDOWN DE BÚSQUEDA FLOTANTE ==================== */
+        .search-results-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 320px;
+            max-height: 380px;
+            background-color: #FFFFFF;
+            border: 1px solid #DCBBED;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.15);
+            overflow-y: auto;
+            z-index: 2000;
+            display: none;
+            margin-top: 10px;
+            padding: 8px 0;
+            text-align: left;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #1A1A2E;
+            transition: background-color 0.2s, transform 0.2s;
+            border-bottom: 1px solid #F3F2F8;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #F8F3FB;
+        }
+
+        .result-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #EAE6F8;
+        }
+
+        .result-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .result-text {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .result-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1A1A2E;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+
+        .result-meta {
+            font-size: 0.75rem;
+            color: #5551A7;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .no-results-suggestion {
+            padding: 16px;
+            text-align: center;
+            color: #4A4A6A;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BARRA UNIFICADA (LOGO + NAVEGACIÓN + BUSCADOR) -->
+    <div class="unified-header-container">
+        <header class="unified-header">
+            <!-- 1. Logo -->
+            <div class="logo-area">
+                <a href="/">
+                    <img src="/media/logos/IMAGOTIPO%20HORIZONTAL.png" alt="Talento Mujer Logo">
+                </a>
+            </div>
+
+            <!-- 2. Menú de Navegación -->
+            <nav class="unified-nav">
+                <ul>
+
+                    <li class="nav-item">
+                        <a href="#mapa-section" class="nav-link">Emprendedoras <span class="dropdown-arrow">&#9662;</span></a>
+                        <div class="dropdown-menu">
+                            {% if emprendedoras %}
+                            {% for emp in emprendedoras %}
+                            <a href="{% url 'perfil_emprendedora' emp.id %}">{{ emp.nombre }}</a>
+                            {% endfor %}
+                            {% else %}
+                            <a href="#mapa-section">Artesanas</a>
+                            <a href="#mapa-section">Territorios</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'vitrina_productos' %}" class="nav-link">Catálogo <span class="dropdown-arrow">&#9662;</span></a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'vitrina_productos' %}">Ver todo</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=Textiles">Textiles</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=Orfebrería">Orfebrería</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#noticias-section" class="nav-link">Noticias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#proposito-section" class="nav-link">Propósito <span class="dropdown-arrow">&#9662;</span></a>
+                        <div class="dropdown-menu">
+                            <a href="#proposito-section">Nuestra Misión</a>
+                            <a href="#main-footer">Contacto</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- 3. Buscador Expandible -->
+            <div class="search-area" style="position: relative;">
+                <div class="expandable-search">
+                    <span class="search-icon"><img src="/media/Iconos%20lila/Buscar.png" alt="Buscar" style="width: 18px; height: 18px; object-fit: contain;"></span>
+                    <input type="text" id="public-search-input" placeholder="Buscar...">
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menú Móvil">☰</button>
+                <!-- Panel Flotante de Resultados -->
+                <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+            </div>
+        </header>
+    </div>
+
+    <section class="hero-section">
+        <!-- Elementos Decorativos de Fondo (Mesh Gradient & Vectores) -->
+        <div class="hero-bg-shape shape-blob-1"></div>
+        <div class="hero-bg-shape shape-blob-2"></div>
+        <div class="hero-bg-shape shape-blob-3"></div>
+        <div class="hero-bg-shape shape-ring-1"></div>
+        <div class="hero-bg-shape shape-ring-2"></div>
+        <div class="hero-bg-shape shape-ring-3"></div>
+        
+        <!-- Rama de hojas izquierda en el fondo -->
+        <svg class="deco-leaf-left-svg" viewBox="0 0 200 200" fill="none" stroke="rgba(192, 125, 227, 0.2)" stroke-width="1.5">
+            <path d="M180 180 C120 140 80 80 30 30" />
+            <path d="M110 120 C130 100 135 80 120 75 C105 70 100 90 110 120 Z" fill="rgba(219, 182, 239, 0.03)" />
+            <path d="M80 90 C95 70 100 50 85 45 C70 40 65 60 80 90 Z" fill="rgba(219, 182, 239, 0.03)" />
+            <path d="M60 70 C70 45 70 25 55 20 C40 15 40 35 60 70 Z" fill="rgba(219, 182, 239, 0.03)" />
+        </svg>
+
+        <div class="container hero-container">
+            <!-- Columna Izquierda: Información de la Marca y Botones -->
+            <div class="hero-left">
+                <h1 class="hero-title">
+                    <span class="title-line-1">Red Colaborativa</span>
+                    <span class="title-line-2">Talento de mujer</span>
+                </h1>
+                <div class="hero-divider"></div>
+                <p class="hero-description">Te invitamos a conocer las manos y el corazón detrás de la mejor artesanía chilena.</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'vitrina_productos' %}" class="btn-primary">Explorar catálogo →</a>
+                    <a href="#proposito-section" class="btn-secondary">
+                        <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        Conoce nuestro propósito
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Composición Orgánica e Imágenes Flotantes -->
+            <div class="hero-right">
+                <!-- Rama de hojas decorativa (SVG) en el fondo -->
+                <svg class="deco-leaf-svg" viewBox="0 0 200 200" fill="none" stroke="rgba(192, 125, 227, 0.25)" stroke-width="2">
+                    <path d="M20 180 C80 140 120 80 170 30" />
+                    <path d="M90 120 C70 100 65 80 80 75 C95 70 100 90 90 120 Z" fill="rgba(219, 182, 239, 0.05)" />
+                    <path d="M120 90 C105 70 100 50 115 45 C130 40 135 60 120 90 Z" fill="rgba(219, 182, 239, 0.05)" />
+                    <path d="M140 70 C130 45 130 25 145 20 C160 15 160 35 140 70 Z" fill="rgba(219, 182, 239, 0.05)" />
+                    <path d="M70 140 C55 125 50 105 65 100 C80 95 85 115 70 140 Z" fill="rgba(219, 182, 239, 0.05)" />
+                    <path d="M150 50 C145 35 145 15 155 10 C165 5 170 20 150 50 Z" fill="rgba(219, 182, 239, 0.05)" />
+                </svg>
+
+                <!-- Grupo de puntos decorativos -->
+                <div class="deco-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+
+                <!-- Brillo trasero para dar efecto aura/sol detrás del blob -->
+                <div class="blob-glow"></div>
+
+                <!-- Blob Principal (Manos Tejiendo) -->
+                <div class="blob-wrapper">
+                    <div class="blob-image"></div>
+                </div>
+
+                <!-- Círculo de Alfarería (Arriba-Derecha) -->
+                <div class="floating-circle circle-pottery">
+                    <img src="https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=300&h=300&fit=crop" alt="Alfarería">
+                </div>
+
+                <!-- Círculo de Macramé (Abajo-Izquierda/Centro) -->
+                <div class="floating-circle circle-macrame">
+                    <img src="https://images.unsplash.com/photo-1528826722302-d3743a9d55ea?q=80&w=300&h=300&fit=crop" alt="Macramé">
+                </div>
+
+                <!-- Tarjeta de Información Flotante -->
+                <div class="floating-badge">
+                    <div class="badge-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#5956B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="badge-text">
+                        <span class="badge-label">Apoyamos a</span>
+                        <span class="badge-number">+500</span>
+                        <span class="badge-sublabel">emprendedoras de todo Chile</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divisor de Onda en la parte inferior de la sección Hero -->
+        <div class="hero-bottom-wave">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <div class="section-header" id="categorias-section">
+        <h2>Categorías de productos</h2>
+        <p>Descubre lo que tenemos para ti.</p>
+    </div>
+    <section class="section-body-box" style="background-color: #ffffff;">
+        <div class="inner-content">
+
+            <div class="carousel-wrapper">
+                <!-- Flecha Izquierda con Efecto -->
+                <button class="carousel-btn prev" aria-label="Anterior">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <span class="btn-text">◀</span>
+                    <span class="btn-text">◀</span>
+                </button>
+
+                <div class="carousel-track-outer">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="category-card">
+                            <div class="category-image">
+                                <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=400&h=240&fit=crop" alt="Artesanía">
+                            </div>
+                            <div class="category-floating-icon"><img src="/media/Iconos%20lila/Artesanías.png" alt="Artesanías" style="width: 28px; height: 28px; object-fit: contain;"></div>
+                            <div class="category-title">Artesanías</div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-image">
+                                <img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?q=80&w=400&h=240&fit=crop" alt="Bisutería y Joyería">
+                            </div>
+                            <div class="category-floating-icon"><img src="/media/Iconos%20lila/Bisutería%20y%20Joyería.png" alt="Bisutería y Joyería" style="width: 28px; height: 28px; object-fit: contain;"></div>
+                            <div class="category-title">Bisutería</div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-image">
+                                <img src="https://images.unsplash.com/photo-1584992236310-6edddc08acff?q=80&w=400&h=240&fit=crop" alt="Lanas y textiles">
+                            </div>
+                            <div class="category-floating-icon"><img src="/media/Iconos%20lila/Lanas%20y%20textiles.png" alt="Lanas y textiles" style="width: 28px; height: 28px; object-fit: contain;"></div>
+                            <div class="category-title">Textiles</div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-image">
+                                <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=400&h=240&fit=crop" alt="Manualidades">
+                            </div>
+                            <div class="category-floating-icon"><img src="/media/Iconos%20lila/Manualidades.png" alt="Manualidades" style="width: 28px; height: 28px; object-fit: contain;"></div>
+                            <div class="category-title">Manualidades</div>
+                        </div>
+                        <div class="category-card">
+                            <div class="category-image">
+                                <img src="https://images.unsplash.com/photo-1568205612837-017257d2310a?q=80&w=400&h=240&fit=crop" alt="Papelería personalizada">
+                            </div>
+                            <div class="category-floating-icon"><img src="/media/Iconos%20lila/Papelería.png" alt="Papelería" style="width: 28px; height: 28px; object-fit: contain;"></div>
+                            <div class="category-title">Papelería</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flecha Derecha con Efecto -->
+                <button class="carousel-btn next" aria-label="Siguiente">
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <svg viewBox="0 0 100 100">
+                        <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+                    </svg>
+                    <span class="btn-text">▶</span>
+                    <span class="btn-text">▶</span>
+                </button>
+            </div>
+            <p class="carousel-tagline">Al comprar, no solo adquieres un artículo único y de calidad; estás invirtiendo
+                directamente en el sueño y el futuro de un hogar.</p>
+        </div>
+    </section>
+
+    <div class="section-header" id="proposito-section">
+        <h2>Nuestro propósito</h2>
+    </div>
+    <section class="section-body-box">
+        <div class="inner-content">
+            <div class="proposito-layout">
+                <div class="proposito-texto">
+                    <p>Esta plataforma es el hogar digital de <strong>64 mujeres Jefas de Hogar, artesanas y creadoras
+                            chilenas</strong>, que han transformado sus talentos en un motor de autonomía económica.</p>
+                    <p>Nuestro propósito es simple, pero poderoso: conectar tu vida con la calidad y la historia que
+                        solo una pieza hecha a mano puede ofrecer.</p>
+                </div>
+                <div class="proposito-imagen-container" style="overflow: hidden; padding: 0; border: none;">
+                    <img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?q=80&w=600&h=400&fit=crop" alt="Mujer artesana" style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mapa-section" id="mapa-section">
+        <div class="section-header">
+            <h2>Orígenes de la Artesanía</h2>
+            <p>Explora la Región del Biobío y descubre el talento detrás de cada territorio.</p>
+        </div>
+        
+        <div class="mapa-layout-wrapper">
+            <div class="mapa-container">
+
+                {% include 'Mapa.html' %}
+
+                <div class="map-tooltip" id="mapTooltip">
+                    <div class="tooltip-header">
+                        <div class="tooltip-title-group">
+                            <span class="tooltip-title">Región</span>
+                            <span class="tooltip-count">0 Emprendedoras</span>
+                        </div>
+                    </div>
+                    <p class="tooltip-desc">Descripción detallada del territorio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="section-header" id="noticias-section">
+        <h2>Últimas Noticias</h2>
+    </div>
+    <section class="section-body-box" style="background-color: #ffffff; padding-bottom: 6rem;">
+        <div class="inner-content">
+            <div class="noticias-container">
+                {% for noticia in noticias %}
+                <a href="{% url 'detalle_noticia' noticia.id %}" class="news-card" style="color: inherit;">
+                    <div class="news-image-container" style="{% if noticia.imagen %}padding: 0; background: none;{% endif %} overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        {% if noticia.imagen %}
+                            <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Noticias%20copia.png" alt="Noticias" style="width: 80px; height: 80px; object-fit: contain; opacity: 0.85;">
+                        {% endif %}
+                    </div>
+                    <div class="news-content">
+                        <span class="news-date">{{ noticia.fecha_publicacion|date:"d M, Y" }}</span>
+                        <h3 class="news-title">{{ noticia.titulo }}</h3>
+                        <p class="news-description">{{ noticia.contenido|linebreaksbr }}</p>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="news-card">
+                    <div class="news-image-container" style="display: flex; align-items: center; justify-content: center; background: #5956B3; color: #FFFFFF;">
+                        <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Noticias%20copia.png" alt="Noticias" style="width: 80px; height: 80px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.85;">
+                    </div>
+                    <div class="news-content">
+                        <span class="news-date">24 Mayo, 2026</span>
+                        <h3 class="news-title">Nuevo catálogo de invierno disponible para toda la región</h3>
+                        <p class="news-description">Descubre las nuevas colecciones de tejidos y lanas preparadas por
+                            nuestras artesanas para esta temporada. Productos únicos y de alta calidad confeccionados a
+                            mano.</p>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-image-container" style="display: flex; align-items: center; justify-content: center; background: #5956B3; color: #FFFFFF;">
+                        <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Noticias%20copia.png" alt="Noticias" style="width: 80px; height: 80px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.85;">
+                    </div>
+                    <div class="news-content">
+                        <span class="news-date">15 Mayo, 2026</span>
+                        <h3 class="news-title">Exitosa feria de emprendedoras en el centro de la ciudad</h3>
+                        <p class="news-description">Más de 50 jefas de hogar presentaron sus productos artesanales y
+                            manualidades en la plaza principal, destacando el talento local y el compromiso con la
+                            comunidad.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="btn-ver-mas-container">
+                <a href="{% url 'todas_noticias' %}" class="btn-ver-mas">Ver todas las noticias</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer" id="main-footer">
+        <div class="footer-top">
+            <div class="footer-col brand-col">
+                <div style="margin-bottom: 0.8rem;">
+                    <img src="/media/logos/Imagotipo%20para%20fondo%20oscuro.png" alt="Talento Mujer Logo" style="height: 70px; object-fit: contain;">
+                </div>
+                <p>Una iniciativa para impulsar el talento de Mujeres Jefas de Hogar artesanas de nuestra región.</p>
+            </div>
+
+            <div class="footer-col">
+                <h3>Explora nuestras secciones</h3>
+                <ul>
+                    <li><a href="#">Emprendedoras</a></li>
+                    <li><a href="#">Catálogo</a></li>
+                    <li><a href="#">Noticias</a></li>
+                    <li><a href="#">Propósito</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Información legal</h3>
+                <ul>
+                    <li><a href="#">Términos y condiciones</a></li>
+                    <li><a href="#">Políticas de privacidad</a></li>
+                    <li><a href="{% url 'panel_admin' %}">Panel de Administración</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Preguntas frecuentes (FAQ)</h3>
+                <ul>
+                    <li><a href="#">¿Cómo elegir tu producto?</a></li>
+                    <li><a href="#">¿Cómo comprar?</a></li>
+                    <li><a href="#">Más preguntas...</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr class="footer-divider">
+
+        <div class="footer-bottom">
+            <div class="social-links">
+                <a href="#" class="social-icon" aria-label="Facebook"><img src="/media/Solo%20redes%20sociales/Facebook%20lila%20blanco.png" alt="Facebook"></a>
+                <a href="#" class="social-icon" aria-label="Instagram"><img src="/media/Solo%20redes%20sociales/Instagram%20lila%20blanco.png" alt="Instagram"></a>
+                <a href="#" class="social-icon" aria-label="TikTok"><img src="/media/Solo%20redes%20sociales/TikTok%20lila%20blanco.png" alt="TikTok"></a>
+                <a href="#" class="social-icon" aria-label="Whatsapp"><img src="/media/Solo%20redes%20sociales/Whatsapp%20lila%20blanco.png" alt="Whatsapp"></a>
+            </div>
+            <p class="credits">Este sitio web fue diseñado por Equipo FabLab</p>
+        </div>
+    </footer>
+
+    <!-- Inyectamos los datos de las zonas desde Django -->
+    {{ zonas_list|json_script:"zonas-data" }}
+
+    <script>
+        // ==========================================
+        // LÓGICA DEL CARRUSEL
+        // ==========================================
+        const track = document.getElementById('carouselTrack');
+        const btnPrev = document.querySelector('.carousel-btn.prev');
+        const btnNext = document.querySelector('.carousel-btn.next');
+
+        if (track) {
+            const originalCards = Array.from(track.querySelectorAll('.category-card'));
+            const numOriginals = originalCards.length;
+            const cloneCount = 3; // clone 3 cards at each boundary
+
+            // Append clones to the end
+            for (let i = 0; i < cloneCount; i++) {
+                const clone = originalCards[i].cloneNode(true);
+                clone.classList.add('clone');
+                track.appendChild(clone);
+            }
+
+            // Prepend clones to the start (in reverse order to maintain visual sequence)
+            for (let i = numOriginals - 1; i >= numOriginals - cloneCount; i--) {
+                const clone = originalCards[i].cloneNode(true);
+                clone.classList.add('clone');
+                track.insertBefore(clone, track.firstChild);
+            }
+
+            let currentTrackIndex = cloneCount;
+            let isTransitioning = false;
+
+            function updateCarousel(animate = true) {
+                if (window.innerWidth <= 768) {
+                    track.style.transform = 'none';
+                    track.style.transition = 'none';
+                    return;
+                }
+
+                const cardWidth = originalCards[0].offsetWidth + 24; // 24px corresponds to the gap (1.5rem)
+
+                if (animate) {
+                    track.style.transition = 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+                } else {
+                    track.style.transition = 'none';
+                }
+
+                track.style.transform = `translateX(-${currentTrackIndex * cardWidth}px)`;
+            }
+
+            if (btnPrev && btnNext) {
+                btnPrev.style.opacity = '1';
+                btnPrev.style.pointerEvents = 'auto';
+                btnNext.style.opacity = '1';
+                btnNext.style.pointerEvents = 'auto';
+
+                btnPrev.addEventListener('click', () => {
+                    if (isTransitioning) return;
+                    isTransitioning = true;
+                    currentTrackIndex--;
+                    updateCarousel(true);
+                });
+
+                btnNext.addEventListener('click', () => {
+                    if (isTransitioning) return;
+                    isTransitioning = true;
+                    currentTrackIndex++;
+                    updateCarousel(true);
+                });
+            }
+
+            track.addEventListener('transitionend', () => {
+                isTransitioning = false;
+                const cardWidth = originalCards[0].offsetWidth + 24;
+
+                // When reaching the right boundary clones, jump instantly back to the first original
+                if (currentTrackIndex >= numOriginals + cloneCount) {
+                    track.style.transition = 'none';
+                    currentTrackIndex = currentTrackIndex - numOriginals;
+                    track.style.transform = `translateX(-${currentTrackIndex * cardWidth}px)`;
+                    track.offsetHeight; // force layout reflow
+                }
+                // When reaching the left boundary clones, jump instantly forward to the last original
+                else if (currentTrackIndex < cloneCount) {
+                    track.style.transition = 'none';
+                    currentTrackIndex = currentTrackIndex + numOriginals;
+                    track.style.transform = `translateX(-${currentTrackIndex * cardWidth}px)`;
+                    track.offsetHeight; // force layout reflow
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                updateCarousel(false);
+            });
+
+            // Initial positioning without animation at original index 0 (which is position cloneCount)
+            setTimeout(() => {
+                updateCarousel(false);
+            }, 50);
+        }
+
+        // ==========================================
+        // LÓGICA DEL MAPA INTERACTIVO
+        // ==========================================
+        // Nota: Asegúrate de que los <path> o <g> dentro de 'Mapa.html' tengan la clase "map-zone"
+        const mapZones = document.querySelectorAll('.map-zone');
+        const tooltip = document.getElementById('mapTooltip');
+        const tTitle = tooltip ? tooltip.querySelector('.tooltip-title') : null;
+        const tCount = tooltip ? tooltip.querySelector('.tooltip-count') : null;
+        const tDesc = tooltip ? tooltip.querySelector('.tooltip-desc') : null;
+        const mapContainer = document.querySelector('.mapa-container');
+
+        // Cargar datos dinámicos de las zonas
+        let zonasMap = {};
+        try {
+            const zonasData = JSON.parse(document.getElementById('zonas-data').textContent);
+            zonasData.forEach(z => { zonasMap[z.nombre] = z; });
+        } catch (e) {
+            console.error("Error cargando datos de zonas:", e);
+        }
+
+        if (tooltip && mapContainer) {
+            mapZones.forEach(zone => {
+                // Actualizar atributos dataset con datos de la BD si existen
+                const name = zone.dataset.name;
+                if (zonasMap[name]) {
+                    zone.dataset.count = zonasMap[name].cantidad_emprendedoras;
+                    if (zonasMap[name].descripcion) {
+                        zone.dataset.desc = zonasMap[name].descripcion;
+                    }
+                }
+                
+                // Todas las zonas siempre activas con color
+                zone.classList.add('zona-activa');
+
+                zone.addEventListener('mousemove', (e) => {
+                    const containerRect = mapContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
+                    
+                    // Posicionamiento relativo al contenedor del mapa
+                    tooltip.style.left = `${x + 20}px`;
+                    tooltip.style.top = `${y - 30}px`;
+                    
+                    if (tTitle) tTitle.textContent = zone.dataset.name || "Zona Desconocida";
+                    if (tCount) tCount.textContent = (zone.dataset.count || "0") + ' Emprendedoras';
+                    
+                    if (tDesc) {
+                        const descText = (zone.dataset.desc || "").trim();
+                        const tooltipHeader = tooltip.querySelector('.tooltip-header');
+                        if (descText && !descText.startsWith("Comuna de")) {
+                            tDesc.textContent = descText;
+                            tDesc.style.display = 'block';
+                            if (tooltipHeader) {
+                                tooltipHeader.style.borderBottom = '1px solid #DCBBED';
+                                tooltipHeader.style.paddingBottom = '6px';
+                            }
+                        } else {
+                            tDesc.textContent = "";
+                            tDesc.style.display = 'none';
+                            if (tooltipHeader) {
+                                tooltipHeader.style.borderBottom = 'none';
+                                tooltipHeader.style.paddingBottom = '0';
+                            }
+                        }
+                    }
+                    
+                    tooltip.classList.add('active');
+                });
+                
+                zone.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('active');
+                });
+            });
+
+            // ==========================================
+            // LÓGICA DEL BUSCADOR DE CABECERA (DROPDOWN SUGGESTIONS)
+            // ==========================================
+            const searchInput = document.getElementById('public-search-input');
+            const resultsDropdown = document.getElementById('searchResultsDropdown');
+
+            if (searchInput && resultsDropdown) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.trim().toLowerCase();
+                    if (!query) {
+                        resultsDropdown.innerHTML = '';
+                        resultsDropdown.style.display = 'none';
+                        return;
+                    }
+
+                    const matches = publicSearchData.filter(emp => 
+                        emp.nombre.toLowerCase().includes(query) ||
+                        emp.rubro.toLowerCase().includes(query) ||
+                        emp.territorio.toLowerCase().includes(query)
+                    );
+
+                    if (matches.length > 0) {
+                        resultsDropdown.innerHTML = matches.map(emp => `
+                            <a href="${emp.perfilUrl}" class="search-result-item">
+                                <div class="result-avatar">
+                                    <img src="${emp.imagenUrl}" alt="${emp.nombre}">
+                                </div>
+                                <div class="result-text">
+                                    <span class="result-name">${emp.nombre}</span>
+                                    <span class="result-meta">${emp.rubro} | ${emp.territorio}</span>
+                                </div>
+                            </a>
+                        `).join('');
+                    } else {
+                        resultsDropdown.innerHTML = `
+                            <div class="no-results-suggestion" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <img src="/media/Iconos%20lila/Buscar.png" alt="Buscar" style="width: 18px; height: 18px; object-fit: contain;">
+                                <span>No se encontraron resultados</span>
+                            </div>
+                        `;
+                    }
+                    resultsDropdown.style.display = 'block';
+                });
+
+                // Cerrar al hacer click fuera
+                document.addEventListener('click', (e) => {
+                    if (!searchInput.contains(e.target) && !resultsDropdown.contains(e.target)) {
+                        resultsDropdown.style.display = 'none';
+                    }
+                });
+
+                // Cerrar con Escape
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        resultsDropdown.style.display = 'none';
+                    }
+                });
+
+                // Mostrar al enfocar si tiene texto
+                searchInput.addEventListener('focus', () => {
+                    if (searchInput.value.trim()) {
+                        resultsDropdown.style.display = 'block';
+                    }
+                });
+            }
+        }
+
+        // Datos inyectados desde Django para el buscador de la cabecera
+        const publicSearchData = [
+            {% for emp in emprendedoras %}
+            {
+                id: "{{ emp.id }}",
+                nombre: "{{ emp.nombre|escapejs }}",
+                rubro: "{{ emp.rubro|escapejs }}",
+                territorio: "{{ emp.territorio|escapejs }}",
+                imagenUrl: "{% if emp.imagen_perfil %}{{ emp.imagen_perfil.url }}{% else %}https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=100&h=100&fit=crop{% endif %}",
+                perfilUrl: "{% url 'perfil_emprendedora' emp.id %}"
+            },
+            {% endfor %}
+        ];
+
+        // ==========================================
+        // LÓGICA DE ANIMACIÓN DE ÍCONOS DE CATEGORÍAS
+        // ==========================================
+        const iconFolders = ['Iconos lila', 'Iconos morado', 'Iconos morado2', 'Iconos rosado'];
+        let currentIconFolderIndex = 0;
+        
+        // Seleccionamos solo las imágenes dentro de los círculos de las categorías
+        const categoryIcons = document.querySelectorAll('.category-floating-icon img');
+
+        if (categoryIcons.length > 0) {
+            // 1. Guardamos la ruta original (la que sabemos que SÍ funciona)
+            categoryIcons.forEach(img => {
+                img.dataset.originalPath = img.getAttribute('src');
+            });
+
+            setInterval(() => {
+                currentIconFolderIndex = (currentIconFolderIndex + 1) % iconFolders.length;
+                const newFolder = iconFolders[currentIconFolderIndex];
+                
+                categoryIcons.forEach(img => {
+                    img.classList.add('fade-out');
+                    
+                    setTimeout(() => {
+                        // Tomamos la ruta original que funcionó en la primera carga
+                        const originalPath = img.dataset.originalPath;
+                        
+                        // Convertimos los espacios de la nueva carpeta a %20 de forma manual
+                        const newFolderSafe = newFolder.split(' ').join('%20');
+                        
+                        // Reemplazamos SOLO la carpeta, dejando el nombre del archivo y las tildes intactos
+                        img.src = originalPath.replace("Iconos%20lila", newFolderSafe);
+                        
+                        img.classList.remove('fade-out');
+                    }, 300);
+                });
+            }, 2000); // 2000 milisegundos = 2 segundos
+        }
+
+        // ==========================================
+        // LÓGICA DEL MENÚ MÓVIL
+        // ==========================================
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.querySelector('.unified-nav');
+        if (mobileMenuBtn && mainNav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                if (mainNav.classList.contains('active')) {
+                    mobileMenuBtn.innerHTML = '✕';
+                    mobileMenuBtn.style.fontSize = '2rem';
+                } else {
+                    mobileMenuBtn.innerHTML = '☰';
+                    mobileMenuBtn.style.fontSize = '1.8rem';
+                }
+            });
+        }
+
+        // Lógica de retraso (hover intent) para dropdowns del menú
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const dropdown = item.querySelector('.dropdown-menu');
+            if (!dropdown) return;
+            let timeoutId = null;
+
+            item.addEventListener('mouseenter', () => {
+                if (timeoutId) clearTimeout(timeoutId);
+                item.classList.add('active');
+            });
+
+            item.addEventListener('mouseleave', () => {
+                timeoutId = setTimeout(() => {
+                    item.classList.remove('active');
+                }, 250); // 250ms de delay de gracia
+            });
+        });
+    </script>
+</body>
+</html>

@@ -123,13 +123,13 @@
         .user-role { color: #69658A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
 
         /* Área de Contenido Interno */
-        .content-body { padding: 3rem; }
+        .content-body { padding: 1.5rem 2rem; }
 
         /* Grid de Tarjetas de Métricas */
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-bottom: 2.5rem; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
         .metric-card { 
-            border-radius: 30px; 
-            padding: 2.2rem; 
+            border-radius: 20px; 
+            padding: 1.2rem 1.6rem; 
             color: #FFFFFF; 
             display: flex; 
             align-items: center; 
@@ -139,7 +139,7 @@
             overflow: hidden; 
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .metric-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(89, 86, 179, 0.1); }
+        .metric-card:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(89, 86, 179, 0.08); }
         
         .card-pink { background: linear-gradient(135deg, #E1799F 0%, #F0B9CD 100%); }
         .card-purple { background: linear-gradient(135deg, #5956B3 0%, #C07DE3 100%); }
@@ -151,13 +151,13 @@
         .metric-card-icon { font-size: 3rem; opacity: 0.3; }
 
         /* Widgets en Grid */
-        .dashboard-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+        .dashboard-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
         @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
         }
 
-        .widget-card { background: #FFFFFF; border-radius: 30px; padding: 2.5rem; border: 1px solid #DBB6EF; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); display: flex; flex-direction: column; }
-        .widget-card h3 { color: #5956B3; font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.8rem; }
+        .widget-card { background: #FFFFFF; border-radius: 20px; padding: 1.5rem 1.8rem; border: 1px solid #DBB6EF; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); display: flex; flex-direction: column; }
+        .widget-card h3 { color: #5956B3; font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.5rem; }
         
         /* Gráfico de Barras CSS */
         .chart-list { display: flex; flex-direction: column; gap: 1.2rem; }
@@ -241,14 +241,14 @@
         }
 
         /* Actividad Reciente */
-        .full-width-widget { background: #FFFFFF; border-radius: 30px; padding: 2.5rem; border: 1px solid #DBB6EF; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); margin-bottom: 2.5rem; }
-        .full-width-widget h3 { color: #5956B3; font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.8rem; }
+        .full-width-widget { background: #FFFFFF; border-radius: 20px; padding: 1.5rem 1.8rem; border: 1px solid #DBB6EF; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); margin-bottom: 1.5rem; }
+        .full-width-widget h3 { color: #5956B3; font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.5rem; }
         
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; text-align: left; }
         th { color: #69658A; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; padding: 0 1.2rem 0.5rem; border: none; }
-        td { background: #F2E8F9; padding: 1rem 1.2rem; border: none; font-size: 0.95rem; }
-        tr td:first-child { border-radius: 20px 0 0 20px; }
-        tr td:last-child { border-radius: 0 20px 20px 0; }
+        td { background: #F2E8F9; padding: 0.65rem 1rem; border: none; font-size: 0.95rem; }
+        tr td:first-child { border-radius: 12px 0 0 12px; }
+        tr td:last-child { border-radius: 0 12px 12px 0; }
         tbody tr:hover td { background: #FFFFFF; cursor: pointer; box-shadow: 0 8px 20px rgba(89, 86, 179, 0.05); }
         .date-badge { font-size: 0.8rem; background: #EAE6F8; color: #5956B3; padding: 4px 10px; border-radius: 12px; font-weight: 700; display: inline-block; }
     </style>
@@ -278,7 +278,12 @@
                     </span>
                     <span class="nav-text">Emprendedoras</span>
                 </a>
-
+                <a href="{% url 'personalizar_hero' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Proceso.png" alt="Personalizar Inicio" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Personalizar Inicio</span>
+                </a>
                 <a href="{% url 'agregar_noticia' %}" class="nav-item">
                     <span class="nav-icon">
                         <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="sidebar-icon-img">

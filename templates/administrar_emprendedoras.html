@@ -125,28 +125,28 @@
         .user-role { color: #69658A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
 
         /* Área de Contenido Interno */
-        .content-body { padding: 3rem; }
+        .content-body { padding: 1.5rem 2rem; }
 
         /* Tarjetas de formulario y tablas */
-        .form-card, .table-container { background: #FFFFFF; border-radius: 30px; padding: 3rem; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); width: 100%; border: 1px solid #DBB6EF; margin-bottom: 2.5rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .form-card, .table-container { background: #FFFFFF; border-radius: 24px; padding: 1.8rem 2.2rem; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); width: 100%; border: 1px solid #DBB6EF; margin-bottom: 1.8rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .form-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(89, 86, 179, 0.06); }
-        .form-card h3 { color: #5956B3; margin-bottom: 2rem; font-size: 1.35rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+        .form-card h3 { color: #5956B3; margin-bottom: 1.2rem; font-size: 1.25rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
         
         /* Inputs y Grupos */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 0.8rem; display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: span 2; }
-        label { font-weight: 700; margin-bottom: 0.6rem; color: #69658A; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select, textarea { padding: 1rem 1.2rem; border: 2px solid transparent; border-radius: 20px; outline: none; font-size: 1rem; transition: all 0.3s ease; background-color: #F2E8F9; width: 100%; color: #2D2A4A; font-weight: 500; }
+        label { font-weight: 700; margin-bottom: 0.4rem; color: #69658A; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea { padding: 0.65rem 1rem; border: 2px solid transparent; border-radius: 12px; outline: none; font-size: 0.95rem; transition: all 0.3s ease; background-color: #F2E8F9; width: 100%; color: #2D2A4A; font-weight: 500; }
         input:focus, select:focus, textarea:focus { border-color: #C07DE3; background-color: #FFFFFF; box-shadow: 0 0 0 4px rgba(192, 125, 227, 0.15); }
-        textarea { resize: vertical; min-height: 120px; }
+        textarea { resize: vertical; min-height: 80px; }
         
         /* Botones */
-        .btn-submit { background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; border: none; padding: 1rem 2rem; font-size: 1.05rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); letter-spacing: 0.5px; }
+        .btn-submit { background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; border: none; padding: 0.7rem 1.8rem; font-size: 0.95rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); letter-spacing: 0.5px; }
         .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(225, 121, 159, 0.35); }
         .btn-submit:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2); }
         
-        .btn-secondary { background: #FFFFFF; color: #5956B3; border: 2px solid #DBB6EF; padding: 0.8rem 1.5rem; font-size: 0.95rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-secondary { background: #FFFFFF; color: #5956B3; border: 2px solid #DBB6EF; padding: 0.6rem 1.2rem; font-size: 0.9rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; text-align: center; }
         .btn-secondary:hover { background: #F2E8F9; border-color: #5956B3; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(89, 86, 179, 0.1); }
         
         .btn-remove { background: #FFF0F0; color: #FF4D4D; border: none; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 700; border-radius: 20px; cursor: pointer; transition: 0.3s ease; }
@@ -183,10 +183,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             background: #FFFFFF;
-            padding: 1.8rem 3rem;
-            border-radius: 30px;
+            padding: 1rem 2.2rem;
+            border-radius: 20px;
             border: 1px solid #DBB6EF;
             box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03);
             position: relative;
@@ -518,7 +518,12 @@
                     </span>
                     <span class="nav-text">Emprendedoras</span>
                 </a>
-
+                <a href="{% url 'personalizar_hero' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Proceso.png" alt="Personalizar Inicio" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Personalizar Inicio</span>
+                </a>
                 <a href="{% url 'agregar_noticia' %}" class="nav-item">
                     <span class="nav-icon">
                         <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="sidebar-icon-img">
@@ -574,8 +579,13 @@
                 {% endif %}
 
                 <!-- Formulario Paso a Paso (Wizard) -->
-                <form method="POST" enctype="multipart/form-data" id="wizard-form" novalidate {% if is_edit %}action="{% url 'editar_emprendedora' emprendedora.id %}" class="edit-mode"{% endif %}>
-                    {% csrf_token %}
+                <div id="wizard-container" style="{% if is_edit %}display: block;{% else %}display: none;{% endif %} margin-bottom: 3rem;">
+                    <button type="button" id="btn-hide-wizard" style="background: none; border: none; color: #5551A7; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; margin-bottom: 2rem; transition: transform 0.2s ease;">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s ease;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Volver al listado de perfiles
+                    </button>
+                    <form method="POST" enctype="multipart/form-data" id="wizard-form" novalidate {% if is_edit %}action="{% url 'editar_emprendedora' emprendedora.id %}" class="edit-mode"{% endif %}>
+                        {% csrf_token %}
                     
                     <!-- Inputs ocultos para registrar eliminaciones de productos/procesos -->
                     <input type="hidden" name="deleted_productos" id="deleted_productos" value="">
@@ -873,13 +883,39 @@
                         <button type="button" class="btn-submit" id="btn-next">Siguiente</button>
                     </div>
                 </form>
+            </div>
 
-                <!-- SECCIÓN 4: LISTA DE PERFILES -->
-                <div class="table-container" id="lista-perfiles">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 2px dashed #F8F3FB; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+            <!-- SECCIÓN 4: LISTA DE PERFILES -->
+            <div class="table-container" id="lista-perfiles" style="{% if is_edit %}display: none;{% else %}display: block;{% endif %}">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 2px dashed #F8F3FB; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;">
                         <h3 style="color: #5551A7; font-size: 1.35rem; font-weight: 800; margin: 0;">Perfiles Registrados</h3>
-                        <div style="position: relative; width: 300px; max-width: 100%;">
-                            <input type="text" id="search-input" placeholder="Buscar por nombre, comuna o rubro..." style="padding: 0.7rem 1.2rem 0.7rem 2.8rem; font-size: 0.9rem; border-radius: 20px; background-color: #F8F3FB; border: 2px solid transparent; width: 100%; background-image: url('/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Buscar%20copia.png'); background-repeat: no-repeat; background-position: 1rem center; background-size: 1.2rem; outline: none;">
+                        <button type="button" id="btn-show-wizard" style="padding: 0.5rem 1.2rem; font-size: 0.85rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; font-weight: 700; background: linear-gradient(135deg, #5956B3 0%, #8884FF 100%); color: #FFFFFF; box-shadow: 0 4px 12px rgba(89, 86, 179, 0.2); transition: all 0.3s ease;">
+                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/A%C3%B1adir%20emprendedora%20copia.png" style="width: 16px; height: 16px; object-fit: contain; filter: brightness(0) invert(1);" alt="Crear">
+                            Crear Nueva Emprendedora
+                        </button>
+                    </div>
+                        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; max-width: 100%;">
+                            <!-- Selector de Comuna -->
+                            <div style="position: relative;">
+                                <select id="filter-comuna" style="padding: 0.6rem 2rem 0.6rem 1rem; font-size: 0.85rem; border-radius: 20px; background-color: #F8F3FB; border: 1px solid #EAE6F8; color: #4A4A6A; font-weight: 600; cursor: pointer; outline: none; appearance: none;">
+                                    <option value="todos">Todos los territorios</option>
+                                </select>
+                                <span style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); font-size: 0.65rem; color: #5551A7; pointer-events: none;">▼</span>
+                            </div>
+                            
+                            <!-- Selector de Rubro -->
+                            <div style="position: relative;">
+                                <select id="filter-rubro" style="padding: 0.6rem 2rem 0.6rem 1rem; font-size: 0.85rem; border-radius: 20px; background-color: #F8F3FB; border: 1px solid #EAE6F8; color: #4A4A6A; font-weight: 600; cursor: pointer; outline: none; appearance: none;">
+                                    <option value="todos">Todos los rubros</option>
+                                </select>
+                                <span style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); font-size: 0.65rem; color: #5551A7; pointer-events: none;">▼</span>
+                            </div>
+
+                            <!-- Buscador por Texto -->
+                            <div style="position: relative; width: 260px; max-width: 100%;">
+                                <input type="text" id="search-input" placeholder="Buscar por nombre..." style="padding: 0.6rem 1rem 0.6rem 2.4rem; font-size: 0.85rem; border-radius: 20px; background-color: #F8F3FB; border: 2px solid transparent; width: 100%; background-image: url('/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Buscar%20copia.png'); background-repeat: no-repeat; background-position: 0.8rem center; background-size: 1rem; outline: none;">
+                            </div>
                         </div>
                     </div>
                     <table>
@@ -902,9 +938,11 @@
                                 </td>
                                 <td>{{ emp.territorio }}</td>
                                 <td style="color: #69658A; font-size: 0.95rem;">{{ emp.rubro }}</td>
-                                <td class="action-buttons">
-                                    <a href="{% url 'perfil_emprendedora' emp.id %}" target="_blank" class="btn-sm btn-view">Ver Perfil</a>
-                                    <a href="{% url 'editar_emprendedora' emp.id %}" class="btn-sm btn-edit">Editar</a>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'perfil_emprendedora' emp.id %}" target="_blank" class="btn-sm btn-view">Ver Perfil</a>
+                                        <a href="{% url 'editar_emprendedora' emp.id %}" class="btn-sm btn-edit">Editar</a>
+                                    </div>
                                 </td>
                             </tr>
                             {% empty %}
@@ -1438,27 +1476,106 @@
             `;
         }
 
-        // ==================== BUSCADOR EN TIEMPO REAL PARA LA TABLA ====================
+        // ==================== FILTRADO EN TIEMPO REAL PARA LA TABLA ====================
         const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const query = this.value.toLowerCase().trim();
-                const rows = document.querySelectorAll('#lista-perfiles tbody tr');
+        const filterComuna = document.getElementById('filter-comuna');
+        const filterRubro = document.getElementById('filter-rubro');
+        const tableRows = document.querySelectorAll('#lista-perfiles tbody tr');
+
+        // Extraer y poblar filtros de comuna y rubro de la tabla
+        function populateTableFilters() {
+            if (!filterComuna || !filterRubro) return;
+            const comunas = new Set();
+            const rubros = new Set();
+
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 3) return; // Saltar fila vacía
                 
-                rows.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    if (cells.length < 3) return; // Saltar fila de "no hay registros"
+                const territorioText = cells[1].textContent.trim();
+                const rubroText = cells[2].textContent.trim();
+
+                if (territorioText) comunas.add(territorioText);
+                if (rubroText) rubros.add(rubroText);
+            });
+
+            // Ordenar y agregar al select de comuna
+            Array.from(comunas).sort().forEach(com => {
+                const opt = document.createElement('option');
+                opt.value = com.toLowerCase();
+                opt.textContent = com;
+                filterComuna.appendChild(opt);
+            });
+
+            // Ordenar y agregar al select de rubro
+            Array.from(rubros).sort().forEach(rub => {
+                const opt = document.createElement('option');
+                opt.value = rub.toLowerCase();
+                opt.textContent = rub;
+                filterRubro.appendChild(opt);
+            });
+        }
+
+        // Aplicar los filtros
+        function applyTableFilters() {
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedComuna = filterComuna ? filterComuna.value : 'todos';
+            const selectedRubro = filterRubro ? filterRubro.value : 'todos';
+
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 3) return;
+
+                const name = cells[0].textContent.toLowerCase();
+                const territorio = cells[1].textContent.toLowerCase();
+                const rubro = cells[2].textContent.toLowerCase();
+
+                const matchesSearch = name.includes(query);
+                const matchesComuna = (selectedComuna === 'todos' || territorio === selectedComuna);
+                const matchesRubro = (selectedRubro === 'todos' || rubro === selectedRubro);
+
+                if (matchesSearch && matchesComuna && matchesRubro) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Listeners
+        if (searchInput) searchInput.addEventListener('input', applyTableFilters);
+        if (filterComuna) filterComuna.addEventListener('change', applyTableFilters);
+        if (filterRubro) filterRubro.addEventListener('change', applyTableFilters);
+
+        // ==================== MOSTRAR / OCULTAR WIZARD FORM ====================
+        const btnShowWizard = document.getElementById('btn-show-wizard');
+        const btnHideWizard = document.getElementById('btn-hide-wizard');
+        const wizardContainer = document.getElementById('wizard-container');
+        const listaPerfiles = document.getElementById('lista-perfiles');
+
+        if (btnShowWizard && wizardContainer && listaPerfiles) {
+            btnShowWizard.addEventListener('click', () => {
+                listaPerfiles.style.display = 'none';
+                wizardContainer.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        if (btnHideWizard && wizardContainer && listaPerfiles) {
+            btnHideWizard.addEventListener('click', () => {
+                if (isEditMode) {
+                    window.location.href = "{% url 'administrar_emprendedoras' %}";
+                } else {
+                    // Limpiar el formulario si se cancela una creación
+                    const form = document.getElementById('wizard-form');
+                    if (form) form.reset();
+                    // Volver al paso 1
+                    if (typeof showStep === 'function') showStep(1);
                     
-                    const name = cells[0].textContent.toLowerCase();
-                    const territorio = cells[1].textContent.toLowerCase();
-                    const rubro = cells[2].textContent.toLowerCase();
-                    
-                    if (name.includes(query) || territorio.includes(query) || rubro.includes(query)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+                    wizardContainer.style.display = 'none';
+                    listaPerfiles.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             });
         }
 
@@ -1469,6 +1586,7 @@
             setTimeout(() => toast.remove(), 500);
         }
         document.addEventListener("DOMContentLoaded", () => {
+            populateTableFilters();
             document.querySelectorAll('.toast').forEach(toast => {
                 setTimeout(() => {
                     if (document.body.contains(toast)) closeToast(toast.querySelector('.toast-close'));

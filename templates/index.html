@@ -620,7 +620,7 @@
         .blob-image {
             width: 100%;
             height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&h=600&fit=crop');
+            background-image: url('{{ hero_images.blob }}');
             background-size: cover;
             background-position: center;
             transition: transform 0.5s ease;
@@ -1710,12 +1710,13 @@
                 <ul>
 
                     <li class="nav-item">
-                        <a href="#mapa-section" class="nav-link">Emprendedoras <span class="dropdown-arrow">&#9662;</span></a>
+                        <a href="{% url 'todas_emprendedoras' %}" class="nav-link">Emprendedoras <span class="dropdown-arrow">&#9662;</span></a>
                         <div class="dropdown-menu">
+                            <a href="{% url 'todas_emprendedoras' %}" style="font-weight: bold; color: #5551A7; border-bottom: 1px dashed rgba(89, 86, 179, 0.2);">Ver todas las emprendedoras</a>
                             {% if emprendedoras %}
-                            {% for emp in emprendedoras %}
-                            <a href="{% url 'perfil_emprendedora' emp.id %}">{{ emp.nombre }}</a>
-                            {% endfor %}
+                                {% for emp in emprendedoras %}
+                                    <a href="{% url 'perfil_emprendedora' emp.id %}">{{ emp.nombre }}</a>
+                                {% endfor %}
                             {% else %}
                             <a href="#mapa-section">Artesanas</a>
                             <a href="#mapa-section">Territorios</a>
@@ -1728,6 +1729,7 @@
                             <a href="{% url 'vitrina_productos' %}">Ver todo</a>
                             <a href="{% url 'vitrina_productos' %}?cat=Textiles">Textiles</a>
                             <a href="{% url 'vitrina_productos' %}?cat=Orfebrería">Orfebrería</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=favoritos" style="color: #DC7A96; font-weight: bold; border-top: 1px dashed rgba(220, 122, 150, 0.2);">Mis Favoritos ❤️</a>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -1824,12 +1826,12 @@
 
                 <!-- Círculo de Alfarería (Arriba-Derecha) -->
                 <div class="floating-circle circle-pottery">
-                    <img src="https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=300&h=300&fit=crop" alt="Alfarería">
+                    <img src="{{ hero_images.pottery }}" alt="Alfarería">
                 </div>
 
                 <!-- Círculo de Macramé (Abajo-Izquierda/Centro) -->
                 <div class="floating-circle circle-macrame">
-                    <img src="https://images.unsplash.com/photo-1528826722302-d3743a9d55ea?q=80&w=300&h=300&fit=crop" alt="Macramé">
+                    <img src="{{ hero_images.macrame }}" alt="Macramé">
                 </div>
 
                 <!-- Tarjeta de Información Flotante -->

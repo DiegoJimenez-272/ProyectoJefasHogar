@@ -788,6 +788,51 @@
                 border-radius: 20px;
             }
         }
+
+        /* Botón de Lista de Deseos (Favoritos) */
+        .wishlist-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(89, 86, 179, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 4px 12px rgba(89, 86, 179, 0.12);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0;
+        }
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+            background: #FFFFFF;
+            box-shadow: 0 6px 16px rgba(89, 86, 179, 0.2);
+        }
+        .wishlist-btn:active {
+            transform: scale(0.9);
+        }
+        .heart-icon {
+            fill: transparent;
+            stroke: #5956B3; /* Morado a tono con la paleta */
+            stroke-width: 2.2;
+            transition: all 0.3s ease;
+        }
+        .wishlist-btn.active .heart-icon {
+            fill: #DC7A96; /* Rosa/Rojo premium */
+            stroke: #DC7A96;
+            animation: pulse-heart 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes pulse-heart {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 
@@ -804,8 +849,9 @@
             <nav class="unified-nav">
                 <ul>
                     <li class="nav-item">
-                        <a href="/#mapa-section" class="nav-link">Emprendedoras <span class="dropdown-arrow">&#9662;</span></a>
+                        <a href="{% url 'todas_emprendedoras' %}" class="nav-link">Emprendedoras <span class="dropdown-arrow">&#9662;</span></a>
                         <div class="dropdown-menu">
+                            <a href="{% url 'todas_emprendedoras' %}" style="font-weight: bold; color: #5551A7; border-bottom: 1px dashed rgba(89, 86, 179, 0.2);">Ver todas las emprendedoras</a>
                             {% if emprendedoras %}
                             {% for emp in emprendedoras %}
                             <a href="{% url 'perfil_emprendedora' emp.id %}">{{ emp.nombre }}</a>
@@ -822,6 +868,7 @@
                             <a href="{% url 'vitrina_productos' %}">Ver todo</a>
                             <a href="{% url 'vitrina_productos' %}?cat=Textiles">Textiles</a>
                             <a href="{% url 'vitrina_productos' %}?cat=Orfebrería">Orfebrería</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=favoritos" style="color: #DC7A96; font-weight: bold; border-top: 1px dashed rgba(220, 122, 150, 0.2);">Mis Favoritos ❤️</a>
                         </div>
                     </li>
                     <li class="nav-item">
@@ -878,6 +925,12 @@
                     {% for cat in categorias %}
                     <button class="pill-btn" data-category="{{ cat|slugify }}">{{ cat }}</button>
                     {% endfor %}
+                    <button class="pill-btn favorited-pill" data-category="favoritos" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="#DC7A96" style="vertical-align: middle;">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span>Mis Favoritos</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -886,7 +939,7 @@
         <section class="container">
             <div class="products-grid" id="products-grid">
                 {% for prod in productos %}
-                <div class="product-card" data-cat-slug="{{ prod.emprendedora.rubro|slugify }}" data-name="{{ prod.nombre|lower }}" data-desc="{{ prod.descripcion|lower }}" data-maker="{{ prod.emprendedora.nombre|lower }}">
+                <div class="product-card" data-product-id="{{ prod.id }}" data-cat-slug="{{ prod.emprendedora.rubro|slugify }}" data-name="{{ prod.nombre|lower }}" data-desc="{{ prod.descripcion|lower }}" data-maker="{{ prod.emprendedora.nombre|lower }}">
                     <!-- Imagen de Producto -->
                     <div class="card-image-container">
                         <span class="card-category-tag">{{ prod.emprendedora.rubro }}</span>
@@ -906,6 +959,12 @@
                             </span>
                         </div>
                         {% endif %}
+                        <!-- Botón Favorito -->
+                        <button class="wishlist-btn" data-product-id="{{ prod.id }}" aria-label="Agregar a favoritos">
+                            <svg class="heart-icon" viewBox="0 0 24 24" width="22" height="22">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </button>
                     </div>
 
                     <!-- Cuerpo de la Tarjeta -->
@@ -1035,16 +1094,45 @@
         let activeCategory = 'todos';
         let searchQuery = '';
 
+        // Obtener favoritos desde localStorage
+        function getFavoritos() {
+            try {
+                const favs = localStorage.getItem('mis-favoritos-productos');
+                return favs ? JSON.parse(favs) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Guardar favoritos en localStorage
+        function saveFavoritos(favs) {
+            try {
+                localStorage.setItem('mis-favoritos-productos', JSON.stringify(favs));
+            } catch (e) {
+                // Silencioso
+            }
+        }
+
         function filterProducts() {
             let visibleCount = 0;
+            const favoritos = getFavoritos();
 
             productCards.forEach(card => {
                 const cardCatSlug = card.getAttribute('data-cat-slug');
                 const name = card.getAttribute('data-name');
                 const desc = card.getAttribute('data-desc');
                 const maker = card.getAttribute('data-maker');
+                const productId = card.getAttribute('data-product-id');
 
-                const matchesCategory = (activeCategory === 'todos' || cardCatSlug === activeCategory);
+                let matchesCategory = false;
+                if (activeCategory === 'todos') {
+                    matchesCategory = true;
+                } else if (activeCategory === 'favoritos') {
+                    matchesCategory = favoritos.includes(productId);
+                } else {
+                    matchesCategory = (cardCatSlug === activeCategory);
+                }
+
                 const matchesSearch = (
                     name.includes(searchQuery) || 
                     desc.includes(searchQuery) || 
@@ -1070,9 +1158,68 @@
             // Mostrar estado vacío si ningún producto coincide
             if (visibleCount === 0 && productCards.length > 0) {
                 dynamicEmptyState.style.display = 'flex';
+                const emptyTitle = dynamicEmptyState.querySelector('h3');
+                const emptyText = dynamicEmptyState.querySelector('p');
+                const emptyImg = dynamicEmptyState.querySelector('img');
+                
+                if (activeCategory === 'favoritos') {
+                    if (emptyTitle) emptyTitle.textContent = 'Tu lista de favoritos está vacía';
+                    if (emptyText) emptyText.textContent = 'Agrega productos presionando el corazón ❤️ en las imágenes.';
+                    if (emptyImg) emptyImg.src = '/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Producto%20copia.png';
+                } else {
+                    if (emptyTitle) emptyTitle.textContent = 'No se encontraron productos';
+                    if (emptyText) emptyText.textContent = 'Prueba ajustando el buscador o seleccionando otra categoría en la barra superior.';
+                    if (emptyImg) emptyImg.src = '/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Buscar%20copia.png';
+                }
             } else {
                 dynamicEmptyState.style.display = 'none';
             }
+        }
+
+        // Inicializar favoritos (Wishlist)
+        function initWishlist() {
+            const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+            const favoritos = getFavoritos();
+            
+            // Sincronizar clases activas
+            wishlistButtons.forEach(btn => {
+                const pId = btn.getAttribute('data-product-id');
+                if (favoritos.includes(pId)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Event listener para botones de favoritos
+            wishlistButtons.forEach(btn => {
+                // Remover listeners anteriores reemplazando el botón para evitar duplicación de eventos
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+
+                newBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const pId = newBtn.getAttribute('data-product-id');
+                    let currentFavs = getFavoritos();
+
+                    if (currentFavs.includes(pId)) {
+                        currentFavs = currentFavs.filter(id => id !== pId);
+                        newBtn.classList.remove('active');
+                    } else {
+                        currentFavs.push(pId);
+                        newBtn.classList.add('active');
+                    }
+
+                    saveFavoritos(currentFavs);
+
+                    // Si estamos en la categoría de favoritos, volver a filtrar la grilla de inmediato
+                    if (activeCategory === 'favoritos') {
+                        filterProducts();
+                    }
+                });
+            });
         }
 
         // Event listener de búsqueda
@@ -1095,6 +1242,8 @@
 
         // Soporte para filtrar directo de la URL (ej: /vitrina/?cat=Textiles)
         window.addEventListener('DOMContentLoaded', () => {
+            initWishlist();
+
             const urlParams = new URLSearchParams(window.location.search);
             const catParam = urlParams.get('cat');
             if (catParam) {

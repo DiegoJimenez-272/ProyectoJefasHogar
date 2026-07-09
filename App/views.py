@@ -1,4 +1,6 @@
 import json
+import os
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -48,6 +50,17 @@ def clean_price(value):
     except Exception:
         return Decimal('0.00')
 
+def get_custom_hero_image(image_key, default_url):
+    extensions = ['.png', '.jpg', '.jpeg', '.webp']
+    for ext in extensions:
+        filename = f"{image_key}{ext}"
+        file_path = os.path.join(settings.MEDIA_ROOT, 'hero', filename)
+        if os.path.exists(file_path):
+            # Agregar timestamp para evitar cache del navegador
+            timestamp = int(os.path.getmtime(file_path))
+            return f"/media/hero/{filename}?v={timestamp}"
+    return default_url
+
 def home(request):
     emprendedoras = Emprendedora.objects.all()
     
@@ -61,10 +74,19 @@ def home(request):
         })
         
     noticias = Noticia.objects.all().order_by('-fecha_publicacion')[:3]
+    
+    # Obtener imágenes del Hero
+    hero_images = {
+        'blob': get_custom_hero_image('blob', 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&h=600&fit=crop'),
+        'pottery': get_custom_hero_image('circle_pottery', 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=300&h=300&fit=crop'),
+        'macrame': get_custom_hero_image('circle_macrame', 'https://images.unsplash.com/photo-1528826722302-d3743a9d55ea?q=80&w=300&h=300&fit=crop')
+    }
+    
     return render(request, 'index.html', {
         'emprendedoras': emprendedoras, 
         'zonas_list': zonas_list,
-        'noticias': noticias
+        'noticias': noticias,
+        'hero_images': hero_images
     })
 
 def todas_noticias(request):
@@ -394,5 +416,76 @@ def vitrina_productos(request):
         'categorias': categorias,
         'emprendedoras': emprendedoras
     })
+
+def todas_emprendedoras(request):
+    emprendedoras = Emprendedora.objects.all()
+    # Obtener comunas/territorios para los filtros opcionales
+    comunas_set = set()
+    for emp in emprendedoras:
+        if emp.territorio:
+            comunas_set.add(emp.territorio.strip())
+    comunas = sorted(list(comunas_set))
+    
+    return render(request, 'todas_emprendedoras.html', {
+        'emprendedoras': emprendedoras,
+        'comunas': comunas
+    })
+
+@login_required(login_url='login_admin')
+def personalizar_hero(request):
+    from django.core.files.storage import FileSystemStorage
+    hero_dir = os.path.join(settings.MEDIA_ROOT, 'hero')
+    os.makedirs(hero_dir, exist_ok=True)
+    
+    if request.method == 'POST':
+        fs = FileSystemStorage(location=hero_dir)
+        
+        # Procesar los 3 archivos
+        files_keys = {
+            'blob_image': 'blob',
+            'circle_pottery': 'circle_pottery',
+            'circle_macrame': 'circle_macrame'
+        }
+        
+        updated = False
+        for field_name, file_key in files_keys.items():
+            uploaded_file = request.FILES.get(field_name)
+            if uploaded_file:
+                # Eliminar cualquier archivo previo con el mismo prefijo (cualquier extensión)
+                for ext in ['.png', '.jpg', '.jpeg', '.webp']:
+                    old_path = os.path.join(hero_dir, f"{file_key}{ext}")
+                    if os.path.exists(old_path):
+                        try:
+                            os.remove(old_path)
+                        except OSError:
+                            pass
+                
+                # Guardar el nuevo archivo con su extensión original
+                ext = os.path.splitext(uploaded_file.name)[1].lower()
+                if ext not in ['.png', '.jpg', '.jpeg', '.webp']:
+                    ext = '.png' # Fallback
+                    
+                fs.save(f"{file_key}{ext}", uploaded_file)
+                updated = True
+                
+        if updated:
+            messages.success(request, '¡Las imágenes del banner de Inicio se actualizaron exitosamente!')
+        else:
+            messages.info(request, 'No se seleccionó ninguna imagen nueva.')
+            
+        return redirect('personalizar_hero')
+        
+    # Obtener URLs actuales o las de Unsplash por defecto
+    current_images = {
+        'blob': get_custom_hero_image('blob', 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&h=600&fit=crop'),
+        'pottery': get_custom_hero_image('circle_pottery', 'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=300&h=300&fit=crop'),
+        'macrame': get_custom_hero_image('circle_macrame', 'https://images.unsplash.com/photo-1528826722302-d3743a9d55ea?q=80&w=300&h=300&fit=crop')
+    }
+    
+    return render(request, 'personalizar_hero.html', {
+        'current_images': current_images
+    })
+
+
 
 

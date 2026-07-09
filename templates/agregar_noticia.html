@@ -123,24 +123,24 @@
         .user-role { color: #69658A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
 
         /* Área de Contenido Interno */
-        .content-body { padding: 3rem; }
+        .content-body { padding: 1.5rem 2rem; }
 
         /* Tarjetas de formulario y tablas */
-        .form-card, .table-container { background: #FFFFFF; border-radius: 30px; padding: 3rem; box-shadow: 0 15px 35px rgba(89, 86, 179, 0.03); width: 100%; border: 1px solid #DBB6EF; margin-bottom: 2.5rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .form-card, .table-container { background: #FFFFFF; border-radius: 24px; padding: 1.8rem 2.2rem; box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03); width: 100%; border: 1px solid #DBB6EF; margin-bottom: 1.8rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .form-card:hover { transform: translateY(-5px); box-shadow: 0 25px 45px rgba(89, 86, 179, 0.06); }
-        .form-card h3 { color: #5956B3; margin-bottom: 2rem; font-size: 1.35rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+        .form-card h3 { color: #5956B3; margin-bottom: 1.2rem; font-size: 1.25rem; border-bottom: 2px dashed #F2E8F9; padding-bottom: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
         
         /* Inputs y Grupos */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; }
+        .form-group { margin-bottom: 0.8rem; display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: span 2; }
-        label { font-weight: 700; margin-bottom: 0.6rem; color: #69658A; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select, textarea { padding: 1rem 1.2rem; border: 2px solid transparent; border-radius: 20px; outline: none; font-size: 1rem; transition: all 0.3s ease; background-color: #F2E8F9; width: 100%; color: #2D2A4A; font-weight: 500; }
+        label { font-weight: 700; margin-bottom: 0.4rem; color: #69658A; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea { padding: 0.65rem 1rem; border: 2px solid transparent; border-radius: 12px; outline: none; font-size: 0.95rem; transition: all 0.3s ease; background-color: #F2E8F9; width: 100%; color: #2D2A4A; font-weight: 500; }
         input:focus, select:focus, textarea:focus { border-color: #C07DE3; background-color: #FFFFFF; box-shadow: 0 8px 20px rgba(192, 125, 227, 0.15); }
-        textarea { resize: vertical; min-height: 120px; }
+        textarea { resize: vertical; min-height: 80px; }
         
         /* Botones */
-        .btn-submit { background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; border: none; padding: 1rem 2rem; font-size: 1.05rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); letter-spacing: 0.5px; margin-top: 1rem; }
+        .btn-submit { background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; border: none; padding: 0.7rem 1.8rem; font-size: 0.95rem; font-weight: 700; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); letter-spacing: 0.5px; margin-top: 1rem; }
         .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(225, 121, 159, 0.35); }
         .btn-submit:active { transform: translateY(0); box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2); }
         
@@ -159,9 +159,9 @@
         /* Tablas */
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 1rem; text-align: left; }
         th { color: #69658A; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; padding: 0 1.5rem 0.5rem; border: none; }
-        td { background: #F2E8F9; padding: 1.2rem 1.5rem; border: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        tr td:first-child { border-radius: 24px 0 0 24px; }
-        tr td:last-child { border-radius: 0 24px 24px 0; }
+        td { background: #F2E8F9; padding: 0.65rem 1rem; border: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        tr td:first-child { border-radius: 12px 0 0 12px; }
+        tr td:last-child { border-radius: 0 12px 12px 0; }
         tbody tr:hover td { background: #FFFFFF; cursor: pointer; box-shadow: 0 10px 25px rgba(89, 86, 179, 0.08); }
         .action-buttons { display: flex; gap: 0.5rem; align-items: center; }
         .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; font-weight: 700; border-radius: 20px; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none; display: inline-block; }
@@ -216,7 +216,12 @@
                     </span>
                     <span class="nav-text">Emprendedoras</span>
                 </a>
-
+                <a href="{% url 'personalizar_hero' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Proceso.png" alt="Personalizar Inicio" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Personalizar Inicio</span>
+                </a>
                 <a href="{% url 'agregar_noticia' %}" class="nav-item active">
                     <span class="nav-icon">
                         <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="sidebar-icon-img">
@@ -322,9 +327,11 @@
                                 </td>
                                 <td style="font-weight: 700; color: #2D2A4A;">{{ noticia.titulo }}</td>
                                 <td>{{ noticia.fecha_publicacion|date:"d M, Y - H:i" }}</td>
-                                <td class="action-buttons">
-                                    <a href="{% url 'editar_noticia' noticia.id %}" class="btn-sm btn-edit">Editar</a>
-                                    <a href="{% url 'eliminar_noticia' noticia.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta noticia?');">Eliminar</a>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'editar_noticia' noticia.id %}" class="btn-sm btn-edit">Editar</a>
+                                        <a href="{% url 'eliminar_noticia' noticia.id %}" class="btn-sm btn-delete" onclick="return confirm('¿Estás seguro de que deseas eliminar esta noticia?');">Eliminar</a>
+                                    </div>
                                 </td>
                             </tr>
                             {% empty %}

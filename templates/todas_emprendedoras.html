@@ -1,0 +1,1050 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emprendedoras - Red Colaborativa Talento de Mujer</title>
+    <link rel="icon" href="/media/logos/ISOTIPO.png" type="image/png" sizes="32x32 64x64">
+    <style>
+        /* ==================== ESTILOS BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #F8F6FD;
+            color: #1A1A2E;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ==================== CONTENEDOR PRINCIPAL ==================== */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ==================== MENU UNIFICADO (FLOTANTE) ==================== */
+        .unified-header-container {
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 20px auto 0;
+        }
+
+        .unified-header {
+            background-color: #FFFFFF;
+            border-radius: 50px;
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.08);
+            border: 1px solid #EAE6F8;
+        }
+
+        .unified-header .logo-area {
+            display: flex;
+            align-items: center;
+            width: 240px;
+            height: 45px;
+            overflow: hidden;
+        }
+
+        .unified-header .logo-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.70);
+        }
+
+        .unified-header .logo-area:hover img {
+            opacity: 0.8;
+        }
+
+        .unified-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .unified-nav .nav-link {
+            color: #4A4A6A;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-block;
+            padding: 0.5rem 0;
+            transition: color 0.2s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .unified-nav .nav-link:hover, .nav-item:hover .nav-link {
+            color: #5551A7;
+            transform: translateY(-1px);
+        }
+
+        .dropdown-arrow {
+            font-size: 0.7rem;
+            margin-left: 2px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%) translateY(20px) scale(0.95);
+            background: #FFFFFF; min-width: 250px; max-height: 280px; overflow-y: auto; overflow-x: hidden; border-radius: 16px; z-index: 100;
+            box-shadow: 0 10px 25px rgba(85, 81, 167, 0.15); border: 1px solid #DCBBED;
+            padding: 0.5rem 0; opacity: 0; visibility: hidden; pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Custom scrollbar for dropdown menu */
+        .dropdown-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+        .dropdown-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dropdown-menu::-webkit-scrollbar-thumb {
+            background: #DCBBED;
+            border-radius: 10px;
+        }
+        .dropdown-menu::-webkit-scrollbar-thumb:hover {
+            background: #C07DE3;
+        }
+        .dropdown-menu::before {
+            content: "";
+            position: absolute;
+            top: -30px;
+            bottom: -30px;
+            left: -40px;
+            right: -40px;
+            z-index: -1;
+        }
+        .nav-item:hover .dropdown-menu,
+        .nav-item.active .dropdown-menu {
+            opacity: 1; visibility: visible; pointer-events: auto;
+            transform: translateX(-50%) translateY(5px) scale(1);
+        }
+        .dropdown-menu a { display: block; padding: 0.6rem 1.5rem; color: #4A4A6A; text-align: left; font-weight: 500; font-size: 0.9rem; transition: background-color 0.2s, color 0.2s; }
+        .dropdown-menu a:hover { background-color: #F8F3FB; color: #DC7A96; }
+
+        /* Buscador del Menu */
+        .search-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 200px;
+            justify-content: flex-end;
+        }
+
+        .expandable-search {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #F8F3FB;
+            border-radius: 30px;
+            padding: 6px 12px;
+            border: 1px solid #EAE6F8;
+            transition: all 0.3s ease;
+            width: 42px;
+            overflow: hidden;
+            justify-content: flex-start;
+        }
+
+        .expandable-search:hover, .expandable-search:focus-within {
+            width: 200px;
+            background: #FFFFFF;
+            border-color: #DCBBED;
+            box-shadow: 0 4px 15px rgba(85, 81, 167, 0.08);
+        }
+
+        .search-icon {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: 1px;
+        }
+
+        .expandable-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            padding-left: 12px;
+            color: #1A1A2E;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .expandable-search:hover input, .expandable-search:focus-within input {
+            opacity: 1;
+            pointer-events: auto;
+            transition-delay: 0.1s;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #5551A7;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: #F8F3FB;
+        }
+
+        @media (max-width: 900px) {
+            .unified-header { position: relative; }
+            .unified-header .logo-area { width: auto; max-width: 160px; min-width: 120px; }
+            .search-area { min-width: auto; }
+            .mobile-menu-btn { display: block; }
+            .unified-nav {
+                position: absolute; top: 85px; left: 0; right: 0;
+                background: #FFFFFF; border-radius: 24px;
+                box-shadow: 0 15px 35px rgba(85, 81, 167, 0.15);
+                border: 1px solid #EAE6F8; padding: 1.5rem;
+                opacity: 0; visibility: hidden; transform: translateY(-15px);
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .unified-nav.active { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+            .unified-nav ul { flex-direction: column; gap: 1.2rem; align-items: center; }
+            .expandable-search:hover, .expandable-search:focus-within { width: 180px; }
+            .dropdown-menu {
+                position: static; transform: none !important; box-shadow: none;
+                border: none; background: #F8F3FB; margin-top: 10px; display: none;
+            }
+            .nav-item:hover .dropdown-menu, .nav-item:focus-within .dropdown-menu { display: block; }
+        }
+
+        @media (max-width: 480px) {
+            .expandable-search:hover, .expandable-search:focus-within { width: 140px; }
+        }
+
+        /* ==================== HERO DE SECCION ==================== */
+        .hero-section {
+            background-color: #FFFFFF;
+            padding: 5rem 0 4rem;
+            text-align: center;
+            border-bottom: 1px solid #EAE6F8;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(220, 187, 237, 0.12) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(85, 81, 167, 0.08) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #5551A7;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-4px);
+            color: #DC7A96;
+        }
+
+        .hero-section h1 {
+            font-size: 2.8rem;
+            color: #1A1A2E;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1A1A2E 0%, #5551A7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            font-size: 1.15rem;
+            color: #5C5885;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ==================== CONTROLES DE FILTRADO ==================== */
+        .filter-controls {
+            background-color: #FFFFFF;
+            border: 1px solid #EAE6F8;
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.04);
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        @media (min-width: 768px) {
+            .filter-controls {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.2rem 2rem;
+            }
+        }
+
+        /* Buscador */
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            align-items: center;
+            background-color: #F8F3FB;
+            border: 1px solid #EAE6F8;
+            border-radius: 30px;
+            padding: 0.6rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            background-color: #FFFFFF;
+            border-color: #DCBBED;
+            box-shadow: 0 4px 15px rgba(85, 81, 167, 0.08);
+        }
+
+        .search-box svg {
+            width: 18px;
+            height: 18px;
+            stroke: #5551A7;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            font-size: 0.95rem;
+            color: #1A1A2E;
+            font-weight: 500;
+        }
+
+        .search-box input::placeholder {
+            color: #9A95C5;
+        }
+
+        /* Filtro de Comuna */
+        .select-wrapper {
+            position: relative;
+            min-width: 220px;
+        }
+
+        .select-wrapper select {
+            width: 100%;
+            padding: 0.65rem 2.5rem 0.65rem 1.2rem;
+            font-size: 0.95rem;
+            border: 1px solid #EAE6F8;
+            border-radius: 30px;
+            background-color: #F8F3FB;
+            color: #4A4A6A;
+            font-weight: 600;
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-wrapper select:focus {
+            background-color: #FFFFFF;
+            border-color: #DCBBED;
+            box-shadow: 0 4px 15px rgba(85, 81, 167, 0.08);
+        }
+
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 0.7rem;
+            color: #5551A7;
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* ==================== GRILLA DE TARJETAS ==================== */
+        .makers-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2.2rem;
+            margin-bottom: 5rem;
+        }
+
+        @media (min-width: 640px) {
+            .makers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .makers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Tarjeta de Emprendedora */
+        .maker-card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAE6F8;
+            border-radius: 28px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.03);
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+        }
+
+        .maker-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 45px rgba(85, 81, 167, 0.12);
+            border-color: #DBB6EF;
+        }
+
+        /* Banner Superior del Card */
+        .card-header-banner {
+            height: 90px;
+            background: linear-gradient(135deg, #F2E8F9 0%, #E2DCFA 100%);
+            position: relative;
+        }
+
+        /* Contenedor de Foto Flotante */
+        .maker-photo-wrapper {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 6px 16px rgba(85, 81, 167, 0.1);
+            background-color: #FFFFFF;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .maker-photo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .maker-initials {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #DC7A96 0%, #5551A7 100%);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* Cuerpo del Card */
+        .maker-card-body {
+            padding: 4.5rem 1.8rem 1.8rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .maker-name {
+            font-size: 1.3rem;
+            color: #1A1A2E;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            transition: color 0.2s ease;
+        }
+
+        .maker-card:hover .maker-name {
+            color: #5551A7;
+        }
+
+        .rubro-tag {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #5551A7;
+            background-color: #F2E8F9;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 0.3rem auto 1rem;
+            max-width: fit-content;
+        }
+
+        .maker-meta-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.88rem;
+            color: #5C5885;
+            font-weight: 500;
+        }
+
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .maker-bio-preview {
+            font-size: 0.9rem;
+            color: #69658A;
+            line-height: 1.55;
+            margin-bottom: 1.8rem;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-profile-link {
+            width: 100%;
+            background-color: #F8F3FB;
+            border: 1px solid #EAE6F8;
+            color: #5551A7;
+            padding: 0.8rem;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .maker-card:hover .btn-profile-link {
+            background-color: #5551A7;
+            border-color: #5551A7;
+            color: #FFFFFF;
+            box-shadow: 0 8px 20px rgba(85, 81, 167, 0.25);
+        }
+
+        /* ==================== ESTADO VACIO ==================== */
+        .empty-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: #FFFFFF;
+            border: 1px solid #EAE6F8;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(85, 81, 167, 0.02);
+            margin-bottom: 5rem;
+        }
+
+        .empty-state-icon {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .empty-state h3 {
+            font-size: 1.4rem;
+            color: #1A1A2E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #69658A;
+            font-size: 0.95rem;
+            max-width: 400px;
+        }
+
+        /* ==================== FOOTER ==================== */
+        .main-footer {
+            background-color: #5551A7;
+            color: #FFFFFF;
+            padding: 3rem 0 2rem;
+            font-size: 0.88rem;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-top {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-top {
+                grid-template-columns: 1.5fr 1fr 1fr 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        .brand-col p {
+            line-height: 1.5;
+            opacity: 0.9;
+            margin-top: 1rem;
+            padding-right: 1.5rem;
+        }
+
+        .footer-col h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: #DCBBED;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.6rem;
+        }
+
+        .footer-col ul a {
+            color: #FFFFFF;
+            opacity: 0.85;
+            transition: opacity 0.2s, color 0.2s;
+        }
+
+        .footer-col ul a:hover {
+            opacity: 1;
+            color: #DC7A96;
+        }
+
+        .footer-divider {
+            margin: 2rem 0;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .social-icon {
+            width: 48px;
+            height: 48px;
+            background-color: transparent;
+            border: none;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        .social-icon:hover img {
+            filter: brightness(1.15);
+        }
+
+        .credits {
+            opacity: 0.8;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- BARRA DE NAVEGACION FLOTANTE -->
+    <div class="unified-header-container">
+        <header class="unified-header">
+            <div class="logo-area">
+                <a href="/">
+                    <img src="/media/logos/IMAGOTIPO%20HORIZONTAL.png" alt="Talento Mujer Logo">
+                </a>
+            </div>
+
+            <nav class="unified-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="/#mapa-section" class="nav-link" style="color: #5551A7;">Emprendedoras <span class="dropdown-arrow">&#9662;</span></a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'todas_emprendedoras' %}" style="font-weight: bold; color: #5551A7; border-bottom: 1px dashed rgba(89, 86, 179, 0.2);">Ver todas las emprendedoras</a>
+                            {% if emprendedoras %}
+                            {% for emp in emprendedoras %}
+                            <a href="{% url 'perfil_emprendedora' emp.id %}">{{ emp.nombre }}</a>
+                            {% endfor %}
+                            {% else %}
+                            <a href="/#mapa-section">Artesanas</a>
+                            <a href="/#mapa-section">Territorios</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'vitrina_productos' %}" class="nav-link">Catálogo <span class="dropdown-arrow">&#9662;</span></a>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'vitrina_productos' %}">Ver todo</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=Textiles">Textiles</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=Orfebrería">Orfebrería</a>
+                            <a href="{% url 'vitrina_productos' %}?cat=favoritos" style="color: #DC7A96; font-weight: bold; border-top: 1px dashed rgba(220, 122, 150, 0.2);">Mis Favoritos ❤️</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'todas_noticias' %}" class="nav-link">Noticias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/#proposito-section" class="nav-link">Propósito <span class="dropdown-arrow">&#9662;</span></a>
+                        <div class="dropdown-menu">
+                            <a href="/#proposito-section">Nuestra Misión</a>
+                            <a href="#main-footer">Contacto</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="search-area">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menú Móvil">☰</button>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <!-- CABECERA HERO -->
+        <section class="hero-section">
+            <div class="container">
+                <a href="/" class="back-link">← Volver al Inicio</a>
+                <h1>Nuestras Emprendedoras</h1>
+                <p>Conoce las historias, territorios y saberes de las talentosas artesanas y emprendedoras jefas de hogar que dan vida a nuestra red colaborativa.</p>
+            </div>
+        </section>
+
+        <!-- CONTROLES DE FILTRADO Y BUSQUEDA -->
+        <section class="container">
+            <div class="filter-controls">
+                <!-- Buscador de Texto -->
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="maker-search" placeholder="Buscar por nombre, rubro o territorio...">
+                </div>
+
+                <!-- Selector de Comuna -->
+                <div class="select-wrapper">
+                    <select id="comuna-filter">
+                        <option value="todos">Todos los territorios</option>
+                        {% for com in comunas %}
+                        <option value="{{ com|slugify }}">{{ com }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- GRILLA DE EMPRENDEDORAS -->
+        <section class="container">
+            <div class="makers-grid" id="makers-grid">
+                {% for emp in emprendedoras %}
+                <div class="maker-card" data-comuna-slug="{{ emp.territorio|slugify }}" data-name="{{ emp.nombre|lower }}" data-rubro="{{ emp.rubro|lower }}" data-territorio="{{ emp.territorio|lower }}">
+                    <!-- Banner -->
+                    <div class="card-header-banner"></div>
+                    
+                    <!-- Foto -->
+                    <div class="maker-photo-wrapper">
+                        {% if emp.imagen_perfil %}
+                        <img src="{{ emp.imagen_perfil.url }}" alt="{{ emp.nombre }}">
+                        {% else %}
+                        <div class="maker-initials">{{ emp.nombre|slice:":2"|upper }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Datos -->
+                    <div class="maker-card-body">
+                        <h3 class="maker-name">{{ emp.nombre }}</h3>
+                        {% if emp.rubro %}
+                        <span class="rubro-tag">{{ emp.rubro }}</span>
+                        {% else %}
+                        <span class="rubro-tag">Artesana</span>
+                        {% endif %}
+
+                        <div class="maker-meta-info">
+                            <span class="meta-item">📍 {{ emp.territorio }}</span>
+                        </div>
+
+                        <p class="maker-bio-preview">
+                            {% if emp.historia %}
+                            {{ emp.historia }}
+                            {% else %}
+                            Emprendedora comprometida con el desarrollo artesanal de su territorio, compartiendo cultura y saberes locales.
+                            {% endif %}
+                        </p>
+
+                        <a href="{% url 'perfil_emprendedora' emp.id %}" class="btn-profile-link">
+                            <span>Ver Perfil Completo</span>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state" style="display: flex; width: 100%; grid-column: 1 / -1;">
+                    <div class="empty-state-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/Emprendedora%20copia%20.png" alt="Emprendedoras" style="width: 120px; height: 120px; object-fit: contain; opacity: 0.85;">
+                    </div>
+                    <h3>No hay emprendedoras registradas</h3>
+                    <p>Aún no se han subido perfiles a nuestra red colaborativa.</p>
+                </div>
+                {% endfor %}
+
+                <!-- Tarjeta de Estado Vacío (Filtrado Dinámico) -->
+                <div class="empty-state" id="dynamic-empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Buscar%20copia.png" alt="Buscar" style="width: 120px; height: 120px; object-fit: contain; opacity: 0.85;">
+                    </div>
+                    <h3>No se encontraron artesanas</h3>
+                    <p>Prueba ajustando el buscador o seleccionando otro territorio.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer" id="main-footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-col brand-col">
+                    <div style="margin-bottom: 0.8rem;">
+                        <img src="/media/logos/Imagotipo%20para%20fondo%20oscuro.png" alt="Talento Mujer Logo" style="height: 70px; object-fit: contain;">
+                    </div>
+                    <p>Red Colaborativa que promueve la visibilidad, asociatividad y comercialización de productos creados por talentosas jefas de hogar del Biobío.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Explorar</h3>
+                    <ul>
+                        <li><a href="{% url 'todas_emprendedoras' %}">Emprendedoras</a></li>
+                        <li><a href="{% url 'vitrina_productos' %}">Catálogo</a></li>
+                        <li><a href="{% url 'todas_noticias' %}">Noticias</a></li>
+                        <li><a href="/#proposito-section">Propósito</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Información legal</h3>
+                    <ul>
+                        <li><a href="#">Términos y condiciones</a></li>
+                        <li><a href="#">Políticas de privacidad</a></li>
+                        <li><a href="{% url 'panel_admin' %}">Panel de Administración</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Preguntas frecuentes (FAQ)</h3>
+                    <ul>
+                        <li><a href="#">¿Cómo elegir tu producto?</a></li>
+                        <li><a href="#">¿Cómo comprar?</a></li>
+                        <li><a href="#">Más preguntas...</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <div class="social-links">
+                    <a href="#" class="social-icon" aria-label="Facebook"><img src="/media/Solo%20redes%20sociales/Facebook%20lila%20blanco.png" alt="Facebook"></a>
+                    <a href="#" class="social-icon" aria-label="Instagram"><img src="/media/Solo%20redes%20sociales/Instagram%20lila%20blanco.png" alt="Instagram"></a>
+                    <a href="#" class="social-icon" aria-label="TikTok"><img src="/media/Solo%20redes%20sociales/TikTok%20lila%20blanco.png" alt="TikTok"></a>
+                    <a href="#" class="social-icon" aria-label="Whatsapp"><img src="/media/Solo%20redes%20sociales/Whatsapp%20lila%20blanco.png" alt="Whatsapp"></a>
+                </div>
+                <p class="credits">Este sitio web fue diseñado por Equipo FabLab</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGICA JAVASCRIPT DE FILTRADO -->
+    <script>
+        // Toggle Menú Móvil
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.querySelector('.unified-nav');
+        if (mobileMenuBtn && mainNav) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mobileMenuBtn.innerHTML = mainNav.classList.contains('active') ? '✕' : '☰';
+                mobileMenuBtn.style.fontSize = mainNav.classList.contains('active') ? '2rem' : '1.8rem';
+            });
+        }
+
+        // Lógica de Filtrado y Búsqueda
+        const searchInput = document.getElementById('maker-search');
+        const comunaFilter = document.getElementById('comuna-filter');
+        const makerCards = document.querySelectorAll('.maker-card');
+        const dynamicEmptyState = document.getElementById('dynamic-empty-state');
+
+        let activeComuna = 'todos';
+        let searchQuery = '';
+
+        function filterMakers() {
+            let visibleCount = 0;
+
+            makerCards.forEach(card => {
+                const cardComunaSlug = card.getAttribute('data-comuna-slug');
+                const name = card.getAttribute('data-name');
+                const rubro = card.getAttribute('data-rubro');
+                const territorio = card.getAttribute('data-territorio');
+
+                const matchesComuna = (activeComuna === 'todos' || cardComunaSlug === activeComuna);
+                const matchesSearch = (
+                    name.includes(searchQuery) || 
+                    rubro.includes(searchQuery) || 
+                    territorio.includes(searchQuery)
+                );
+
+                if (matchesComuna && matchesSearch) {
+                    card.style.display = 'flex';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.96)';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                        card.style.transition = 'all 0.3s ease';
+                    }, 50);
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Mostrar estado vacío dinámico
+            if (visibleCount === 0 && makerCards.length > 0) {
+                dynamicEmptyState.style.display = 'flex';
+            } else {
+                dynamicEmptyState.style.display = 'none';
+            }
+        }
+
+        // Búsqueda
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase().trim();
+                filterMakers();
+            });
+        }
+
+        // Filtro comuna
+        if (comunaFilter) {
+            comunaFilter.addEventListener('change', (e) => {
+                activeComuna = e.target.value;
+                filterMakers();
+            });
+        }
+
+        // Lógica de retraso (hover intent) para dropdowns del menú
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const dropdown = item.querySelector('.dropdown-menu');
+            if (!dropdown) return;
+            let timeoutId = null;
+
+            item.addEventListener('mouseenter', () => {
+                if (timeoutId) clearTimeout(timeoutId);
+                item.classList.add('active');
+            });
+
+            item.addEventListener('mouseleave', () => {
+                timeoutId = setTimeout(() => {
+                    item.classList.remove('active');
+                }, 250); // 250ms de delay de gracia
+            });
+        });
+    </script>
+</body>
+
+</html>

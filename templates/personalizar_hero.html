@@ -1,0 +1,831 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizar Inicio - Red Colaborativa Talento de Mujer</title>
+    <link rel="icon" href="/media/logos/ISOTIPO.png" type="image/png" sizes="32x32 64x64">
+    <style>
+        /* --- ESTILO DASHBOARD SIDEBAR (Moderno, Lateral y Limpio) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: #F4F5FD; color: #2D2A4A; font-smoothing: antialiased; }
+        a { text-decoration: none; }
+        
+        /* Contenedor Principal Flex */
+        .admin-layout { display: flex; min-height: 100vh; }
+        
+        /* 1. Sidebar (Menú Lateral) */
+        .sidebar { 
+            width: 280px; 
+            background-color: #5956B3; 
+            color: #FFFFFF; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 2rem 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 4px 0 15px rgba(89, 86, 179, 0.08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            height: 100vh;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-logo { 
+            margin-bottom: 3rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            height: 70px;
+            overflow: hidden;
+        }
+        .sidebar-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-nav { display: flex; flex-direction: column; gap: 0.8rem; }
+        .nav-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 1.2rem; 
+            padding: 1rem 1.5rem; 
+            color: #D2D0F0; 
+            text-decoration: none; 
+            font-weight: 700; 
+            border-radius: 30px; 
+            transition: all 0.3s ease; 
+        }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #FFFFFF; }
+        .nav-item.active { 
+            background: linear-gradient(135deg, #C07DE3, #E1799F); 
+            color: #FFFFFF; 
+            box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25); 
+        }
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .nav-text { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 2. Área de Contenido de la Derecha */
+        .main-content { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; 
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Cabecera Superior */
+        .top-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1.5rem 3rem; 
+            background: #FFFFFF; 
+            box-shadow: 0 4px 15px rgba(89, 86, 179, 0.03); 
+        }
+        .toggle-sidebar-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #5956B3;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .toggle-sidebar-btn:hover {
+            background-color: #F8F3FB;
+        }
+        .admin-layout.collapsed-sidebar .sidebar {
+            transform: translateX(-280px);
+        }
+        .admin-layout.collapsed-sidebar .main-content {
+            margin-left: 0;
+        }
+        .page-info h1 { font-size: 1.5rem; color: #5956B3; font-weight: 800; }
+        .user-profile { display: flex; align-items: center; gap: 1rem; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #C07DE3, #E1799F); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2); }
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-weight: 800; color: #2D2A4A; font-size: 1rem; }
+        .user-role { color: #69658A; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+        /* Área de Contenido Interno */
+        .content-body { padding: 1.5rem 2rem; }
+
+        /* Tarjeta de Formulario */
+        .form-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 1.8rem 2.2rem;
+            box-shadow: 0 10px 30px rgba(89, 86, 179, 0.03);
+            width: 100%;
+            border: 1px solid #DBB6EF;
+            margin-bottom: 1.8rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .form-card:hover { transform: translateY(-5px); box-shadow: 0 25px 45px rgba(89, 86, 179, 0.06); }
+        .form-card h3 {
+            color: #5956B3;
+            margin-bottom: 1.2rem;
+            font-size: 1.25rem;
+            border-bottom: 2px dashed #F2E8F9;
+            padding-bottom: 0.6rem;
+            font-weight: 700;
+        }
+
+        /* Estilos para Iconos PNG de Interfaz */
+        .sidebar-icon-img {
+            width: 48px;
+            height: 48px;
+            max-width: none;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.65;
+            transition: all 0.3s ease;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .nav-item:hover .sidebar-icon-img,
+        .nav-item.active .sidebar-icon-img {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Grilla de Carga de Imágenes */
+        .images-upload-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .images-upload-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Caja de subida de imagen */
+        .image-upload-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #F8F6FD;
+            border: 2px dashed #DBB6EF;
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-card:hover {
+            border-color: #5956B3;
+            background: #F2E8F9;
+        }
+
+        .image-preview-wrapper {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 4px 15px rgba(85, 81, 167, 0.1);
+            margin-bottom: 1rem;
+            background-color: #FFFFFF;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-preview-wrapper.is-blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+
+        .image-preview-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-card-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2D2A4A;
+            margin-bottom: 0.3rem;
+        }
+
+        .upload-card-subtitle {
+            font-size: 0.8rem;
+            color: #69658A;
+            margin-bottom: 1rem;
+        }
+
+        /* Zonas drag-drop */
+        .btn-upload-trigger {
+            background-color: #5956B3;
+            color: #FFFFFF;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-upload-trigger:hover {
+            background-color: #C07DE3;
+            transform: translateY(-2px);
+        }
+
+        .file-input-hidden {
+            display: none;
+        }
+
+        /* Botones de formulario */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px dashed #EAE6F8;
+            padding-top: 1.5rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #C07DE3, #E1799F);
+            color: #FFFFFF;
+            border: none;
+            padding: 0.7rem 1.8rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(225, 121, 159, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(225, 121, 159, 0.35);
+        }
+
+        .btn-submit img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Toasts */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: rgba(26, 26, 46, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            padding: 1.2rem 1.5rem;
+            border-radius: 24px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            min-width: 320px;
+            max-width: 420px;
+            transform: translateX(120%);
+            animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toast.hide {
+            animation: slideOutRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInRight {
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideOutRight {
+            to { transform: translateX(120%); }
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: #A09EBD;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s;
+            padding-left: 15px;
+            font-weight: 300;
+        }
+
+        .toast-close:hover {
+            color: #FFFFFF;
+            transform: scale(1.1);
+        }
+
+        .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10B981, #34D399);
+            width: 100%;
+            animation: toastProgress 5s linear forwards;
+            border-radius: 0 0 0 24px;
+        }
+
+        @keyframes toastProgress {
+            to { width: 0; }
+        }
+
+        .toast-icon {
+            margin-right: 12px;
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+            display: flex;
+            align-items: center;
+        }
+
+        /* ==================== PREVISUALIZACIÓN EN VIVO ==================== */
+        .live-preview-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F6F3FD 100%);
+            border: 1px solid #DBB6EF;
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(89, 86, 179, 0.02);
+            margin-top: 1rem;
+        }
+
+        .preview-tag {
+            font-size: 0.75rem;
+            color: #C07DE3;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .preview-hero-container {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .preview-hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .preview-hero-title {
+            font-size: 2.2rem;
+            color: #2D2A4A;
+            line-height: 0.82;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .p-title-1 { font-weight: 700; color: #2D2A4A; line-height: 0.82; }
+        .p-title-2 { font-weight: 800; color: #2D2A4A; line-height: 0.82; margin-top: -6px; }
+
+        .preview-hero-divider {
+            width: 45px;
+            height: 4px;
+            background: linear-gradient(90deg, #E1799F 0%, #C07DE3 100%);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .preview-hero-description {
+            font-size: 0.9rem;
+            color: #69658A;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+            max-width: 380px;
+        }
+
+        .preview-hero-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .p-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            user-select: none;
+        }
+
+        .p-btn-primary {
+            background-color: #E1799F;
+            color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(225, 121, 159, 0.2);
+        }
+
+        .p-btn-secondary {
+            background-color: transparent;
+            color: #5956B3;
+            border: 1.5px solid #5956B3;
+        }
+
+        .preview-hero-right {
+            position: relative;
+            height: 280px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-composition {
+            position: relative;
+            width: 250px;
+            height: 250px;
+        }
+
+        .preview-blob-wrapper {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #DBB6EF 0%, #C07DE3 100%);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            box-shadow: 0 10px 25px rgba(89, 86, 179, 0.12);
+            animation: morphBlob 12s ease-in-out infinite alternate;
+            z-index: 2;
+        }
+
+        .preview-blob-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .preview-floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .preview-floating-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-circle-pottery {
+            width: 75px;
+            height: 75px;
+            top: 15px;
+            right: 15px;
+            z-index: 3;
+        }
+
+        .preview-circle-macrame {
+            width: 80px;
+            height: 80px;
+            bottom: 15px;
+            right: 55px;
+            z-index: 4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- 1. Menú Lateral (Sidebar) -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <a href="/">
+                    <img src="/media/logos/Imagotipo%20para%20fondo%20oscuro.png" alt="Talento Mujer Logo">
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{% url 'panel_admin' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Dashboard.png" alt="Dashboard" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="{% url 'administrar_emprendedoras' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Emprendedora.png" alt="Emprendedoras" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Emprendedoras</span>
+                </a>
+                <a href="{% url 'personalizar_hero' %}" class="nav-item active">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Proceso.png" alt="Personalizar Inicio" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Personalizar Inicio</span>
+                </a>
+                <a href="{% url 'agregar_noticia' %}" class="nav-item">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Noticias.png" alt="Noticias" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Noticias</span>
+                </a>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <a href="{% url 'logout_admin' %}" class="nav-item" style="color: #DC7A96;">
+                    <span class="nav-icon">
+                        <img src="/media/Funcional/Funcional/Iconos%20lila/Grupo%202/Cerrar%20sesi%C3%B3n.png" alt="Cerrar Sesión" class="sidebar-icon-img">
+                    </span>
+                    <span class="nav-text">Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 2. Área de Contenido Principal -->
+        <div class="main-content">
+            <header class="top-header">
+                <div class="page-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="toggle-sidebar-btn" id="sidebarToggle" aria-label="Ocultar Menú">☰</button>
+                    <h1>Personalizar Banner de Inicio</h1>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info">
+                        <span class="user-name">Administrador</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                {% if messages %}
+                <div class="toast-container">
+                    {% for message in messages %}
+                    <div class="toast">
+                        <div style="display: flex; align-items: center;">
+                            <span class="toast-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </span>
+                            <span>{{ message }}</span>
+                        </div>
+                        <button type="button" class="toast-close" onclick="closeToast(this)">×</button>
+                        <div class="toast-progress"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Formulario de Configuración -->
+                <form method="POST" enctype="multipart/form-data" class="form-card">
+                    {% csrf_token %}
+                    <h3>Círculos e Imágenes del Hero</h3>
+                    <p style="color: #69658A; font-size: 0.9rem; margin-bottom: 2rem;">
+                        Sube imágenes personalizadas para reemplazar las fotos por defecto del banner superior de la página de inicio. Se recomienda usar fotos cuadradas o de igual proporción (1:1).
+                    </p>
+
+                    <div class="images-upload-grid">
+                        <!-- 1. Blob Central -->
+                        <div class="image-upload-card" data-input-id="id_blob_image">
+                            <div class="image-preview-wrapper is-blob">
+                                <img id="preview-blob" src="{{ current_images.blob }}" alt="Blob Principal">
+                            </div>
+                            <span class="upload-card-title">1. Blob Principal</span>
+                            <span class="upload-card-subtitle">(Imagen central e irregular)</span>
+                            <button type="button" class="btn-upload-trigger" onclick="triggerFileInput('id_blob_image')">
+                                Seleccionar Foto
+                            </button>
+                            <input type="file" name="blob_image" id="id_blob_image" class="file-input-hidden" accept="image/*" onchange="previewImage(this, 'preview-blob')">
+                        </div>
+
+                        <!-- 2. Círculo Superior Derecho (Alfarería) -->
+                        <div class="image-upload-card" data-input-id="id_circle_pottery">
+                            <div class="image-preview-wrapper">
+                                <img id="preview-pottery" src="{{ current_images.pottery }}" alt="Círculo Superior">
+                            </div>
+                            <span class="upload-card-title">2. Círculo Superior</span>
+                            <span class="upload-card-subtitle">(Arriba - Derecha)</span>
+                            <button type="button" class="btn-upload-trigger" onclick="triggerFileInput('id_circle_pottery')">
+                                Seleccionar Foto
+                            </button>
+                            <input type="file" name="circle_pottery" id="id_circle_pottery" class="file-input-hidden" accept="image/*" onchange="previewImage(this, 'preview-pottery')">
+                        </div>
+
+                        <!-- 3. Círculo Inferior Izquierdo (Macramé) -->
+                        <div class="image-upload-card" data-input-id="id_circle_macrame">
+                            <div class="image-preview-wrapper">
+                                <img id="preview-macrame" src="{{ current_images.macrame }}" alt="Círculo Inferior">
+                            </div>
+                            <span class="upload-card-title">3. Círculo Inferior</span>
+                            <span class="upload-card-subtitle">(Abajo - Centro/Izquierda)</span>
+                            <button type="button" class="btn-upload-trigger" onclick="triggerFileInput('id_circle_macrame')">
+                                Seleccionar Foto
+                            </button>
+                            <input type="file" name="circle_macrame" id="id_circle_macrame" class="file-input-hidden" accept="image/*" onchange="previewImage(this, 'preview-macrame')">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">
+                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Guardar%20copia.png" alt="Guardar">
+                            <span>Guardar Cambios</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Tarjeta de Previsualización en Vivo -->
+                <div class="form-card" style="margin-top: 2rem;">
+                    <h3>Previsualización en Vivo de la Portada</h3>
+                    <p style="color: #69658A; font-size: 0.9rem; margin-bottom: 2rem;">
+                        Esta es una maqueta interactiva en tiempo real. Al arrastrar o cargar imágenes arriba, verás cómo se actualizará la página de Inicio automáticamente antes de dar clic en guardar.
+                    </p>
+
+                    <div class="live-preview-container">
+                        <div class="preview-hero-container">
+                            <!-- Columna Izquierda -->
+                            <div class="preview-hero-left">
+                                <span class="preview-tag">PORTADA DE INICIO (VISTA PREVIA)</span>
+                                <h2 class="preview-hero-title">
+                                    <span class="p-title-1">Red Colaborativa</span>
+                                    <span class="p-title-2">Talento de mujer</span>
+                                </h2>
+                                <div class="preview-hero-divider"></div>
+                                <p class="preview-hero-description">Te invitamos a conocer las manos y el corazón detrás de la mejor artesanía chilena.</p>
+                                <div class="preview-hero-buttons">
+                                    <span class="p-btn p-btn-primary">Explorar catálogo →</span>
+                                    <span class="p-btn p-btn-secondary">Conoce nuestro propósito</span>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha -->
+                            <div class="preview-hero-right">
+                                <div class="preview-composition">
+                                    <!-- Blob Principal -->
+                                    <div class="preview-blob-wrapper">
+                                        <div id="live-preview-blob" class="preview-blob-image" style="background-image: url('{{ current_images.blob }}');"></div>
+                                    </div>
+
+                                    <!-- Círculo Alfarería -->
+                                    <div class="preview-floating-circle preview-circle-pottery">
+                                        <img id="live-preview-pottery" src="{{ current_images.pottery }}" alt="Alfareria">
+                                    </div>
+
+                                    <!-- Círculo Macramé -->
+                                    <div class="preview-floating-circle preview-circle-macrame">
+                                        <img id="live-preview-macrame" src="{{ current_images.macrame }}" alt="Macrame">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Trigger para abrir el explorador de archivos al hacer clic en el botón
+        function triggerFileInput(id) {
+            const input = document.getElementById(id);
+            if (input) input.click();
+        }
+
+        // Vista previa de la imagen seleccionada localmente con actualización en vivo de la maqueta
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // 1. Actualizar círculo de previsualización superior
+                    if (preview) {
+                        preview.src = e.target.result;
+                    }
+                    
+                    // 2. Actualizar la maqueta en vivo de la portada (abajo)
+                    if (previewId === 'preview-blob') {
+                        const liveBlob = document.getElementById('live-preview-blob');
+                        if (liveBlob) {
+                            liveBlob.style.backgroundImage = `url('${e.target.result}')`;
+                        }
+                    } else if (previewId === 'preview-pottery') {
+                        const livePottery = document.getElementById('live-preview-pottery');
+                        if (livePottery) {
+                            livePottery.src = e.target.result;
+                        }
+                    } else if (previewId === 'preview-macrame') {
+                        const liveMacrame = document.getElementById('live-preview-macrame');
+                        if (liveMacrame) {
+                            liveMacrame.src = e.target.result;
+                        }
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Cierre de notificaciones Toast
+        function closeToast(button) {
+            const toast = button.closest('.toast');
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 500);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.toast').forEach(toast => {
+                setTimeout(() => {
+                    if (document.body.contains(toast)) closeToast(toast.querySelector('.toast-close'));
+                }, 5000);
+            });
+        });
+
+        // Soporte para menú móvil sidebar
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const adminLayout = document.querySelector('.admin-layout');
+        if (toggleBtn && adminLayout) {
+            toggleBtn.addEventListener('click', () => {
+                adminLayout.classList.toggle('collapsed-sidebar');
+            });
+        }
+
+        // Soporte Drag and Drop básico para las tarjetas de carga
+        document.querySelectorAll('.image-upload-card').forEach(card => {
+            const inputId = card.getAttribute('data-input-id');
+            const fileInput = document.getElementById(inputId);
+            const previewId = card.querySelector('img').id;
+
+            card.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                card.style.borderColor = '#5956B3';
+                card.style.background = '#F2E8F9';
+            });
+
+            card.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                card.style.borderColor = '#DBB6EF';
+                card.style.background = '#F8F6FD';
+            });
+
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                card.style.borderColor = '#DBB6EF';
+                card.style.background = '#F8F6FD';
+
+                if (e.dataTransfer.files && e.dataTransfer.files[0] && fileInput) {
+                    fileInput.files = e.dataTransfer.files;
+                    previewImage(fileInput, previewId);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

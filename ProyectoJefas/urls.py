@@ -21,6 +21,8 @@ urlpatterns = [
     path('noticias/', views.todas_noticias, name='todas_noticias'),
     path('noticia/<int:noticia_id>/', views.detalle_noticia, name='detalle_noticia'),
     path('vitrina/', views.vitrina_productos, name='vitrina_productos'),
+    path('emprendedoras/', views.todas_emprendedoras, name='todas_emprendedoras'),
+    path('admin-panel/personalizar-hero/', views.personalizar_hero, name='personalizar_hero'),
 ]
 
 # Servir archivos multimedia en modo DEBUG

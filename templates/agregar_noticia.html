@@ -278,34 +278,48 @@
                 {% endif %}
 
                 <!-- Formulario -->
-                <div class="form-card">
-                    <h3>Crear Nueva Noticia</h3>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>Título de la Noticia</label>
-                                <input type="text" name="titulo" required placeholder="Ej: Exitosa Feria Artesanal de Invierno">
+                <div id="form-container" style="display: none; margin-bottom: 2rem;">
+                    <button type="button" id="btn-hide-form" style="background: none; border: none; color: #5551A7; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; margin-bottom: 1.5rem; transition: transform 0.2s ease;">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s ease;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Volver al listado de noticias
+                    </button>
+                    <div class="form-card">
+                        <h3>Crear Nueva Noticia</h3>
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Título de la Noticia</label>
+                                    <input type="text" name="titulo" required placeholder="Ej: Exitosa Feria Artesanal de Invierno">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Foto / Imagen Principal</label>
+                                    <input type="file" name="imagen" accept="image/*">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Contenido</label>
+                                    <textarea name="contenido" required placeholder="Escribe el cuerpo de la noticia..."></textarea>
+                                </div>
                             </div>
-                            <div class="form-group full-width">
-                                <label>Foto / Imagen Principal</label>
-                                <input type="file" name="imagen" accept="image/*">
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Contenido</label>
-                                <textarea name="contenido" required placeholder="Escribe el cuerpo de la noticia..."></textarea>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-submit" style="display: inline-flex; align-items: center; gap: 0.8rem; justify-content: center;">
-                            <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Guardar%20copia.png" alt="Guardar" style="width: 24px; height: 24px; object-fit: contain; filter: brightness(0) invert(1);">
-                            <span>Publicar Noticia</span>
-                        </button>
-                    </form>
+                            <button type="submit" class="btn-submit" style="display: inline-flex; align-items: center; gap: 0.8rem; justify-content: center;">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%201/Guardar%20copia.png" alt="Guardar" style="width: 24px; height: 24px; object-fit: contain; filter: brightness(0) invert(1);">
+                                <span>Publicar Noticia</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Tabla -->
-                <div class="table-container">
-                    <h3 style="color: #5551A7; font-size: 1.35rem; font-weight: 700; margin-bottom: 1rem;">Noticias Publicadas</h3>
+                <div class="table-container" id="lista-noticias">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 2px dashed #F8F3FB; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;">
+                            <h3 style="color: #5551A7; font-size: 1.35rem; font-weight: 800; margin: 0;">Noticias Publicadas</h3>
+                            <button type="button" id="btn-show-form" style="padding: 0.5rem 1.2rem; font-size: 0.85rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; font-weight: 700; background: linear-gradient(135deg, #5956B3 0%, #8884FF 100%); color: #FFFFFF; box-shadow: 0 4px 12px rgba(89, 86, 179, 0.2); transition: all 0.3s ease;">
+                                <img src="/media/Funcional/Funcional/Iconos%20morado/Grupo%202/A%C3%B1adir%20noticias%20copia.png" style="width: 16px; height: 16px; object-fit: contain; filter: brightness(0) invert(1);" alt="Crear">
+                                Crear Nueva Noticia
+                            </button>
+                        </div>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -360,6 +374,30 @@
                     if (document.body.contains(toast)) closeToast(toast.querySelector('.toast-close'));
                 }, 5000);
             });
+
+            // ==================== MOSTRAR / OCULTAR FORMULARIO DE NOTICIAS ====================
+            const btnShowForm = document.getElementById('btn-show-form');
+            const btnHideForm = document.getElementById('btn-hide-form');
+            const formContainer = document.getElementById('form-container');
+            const listaNoticias = document.getElementById('lista-noticias');
+
+            if (btnShowForm && formContainer && listaNoticias) {
+                btnShowForm.addEventListener('click', () => {
+                    listaNoticias.style.display = 'none';
+                    formContainer.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            if (btnHideForm && formContainer && listaNoticias) {
+                btnHideForm.addEventListener('click', () => {
+                    const form = formContainer.querySelector('form');
+                    if (form) form.reset();
+                    formContainer.style.display = 'none';
+                    listaNoticias.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
         });
 
         const toggleBtn = document.getElementById('sidebarToggle');
